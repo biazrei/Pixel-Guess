@@ -1,0 +1,18 @@
+button{
+    background-color: transparent;
+    border: 2px solid var(--pink);
+    color: var(--text);
+    font-family: var(--font-primary);
+    font-size: var(--font-button);
+    border-radius: 6px;
+    padding: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 0 10px rgba(255, 0, 85, 0.15);
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}

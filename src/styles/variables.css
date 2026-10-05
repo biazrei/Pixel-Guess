@@ -1,0 +1,20 @@
+:root {
+  --background: #0b0a12;
+  --background-secondary: #151325;
+  --color-border: #494749;
+  --pink: #ff0055;
+  --cyan: #00f0ff;
+  --green: #39ff14;
+  --purple: #8b02fc;
+  --red:rgb(238, 8, 8) ;
+  --text: #f4f4f6;
+  --text-secondary: #8b89a5;
+ --font-primary: 'Press Start 2P', 'Courier New', Courier, monospace;
+  --font-secondary: 'Share Tech Mono', 'Consolas', 'Roboto Mono', monospace;
+  --font-size-title:1.2rem;
+  --font-size-subtitle:1rem;
+  --font-size-text:0.9rem;
+  --font-size-button: 0.8rem;
+}
+
+
