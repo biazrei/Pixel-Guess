@@ -9,7 +9,6 @@ button{
     cursor: pointer;
     transition: 0.2s;
     width: 100%;
-    margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
