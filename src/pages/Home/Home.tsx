@@ -14,7 +14,7 @@ export default function Home() {
     <Button cor="pink">IMAGEM DO DIA </Button>
     <Button cor="cyan">SEQUÊNCIA</Button>
     <Button cor="purple">MULTIPLAYER</Button>
-    <Button cor="green">ENTRAR</Button>
+    <Button cor="green" onClick={() => console.log("funcionou ")}>ENTRAR</Button>
     </div>
     </main>
  )
