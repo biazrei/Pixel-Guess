@@ -6,8 +6,10 @@ import "./Home.css"
 export default function Home() {
     return ( 
         <main className="home">
+      <div className="home__text">
         <Title> Pixel Guess </Title>
-    <Text> Adivinhe a imagem oculta </Text>
+        <Text> Adivinhe a imagem oculta </Text>
+    </div>  
     <div className="home__button">
     <Button cor="pink">IMAGEM DO DIA </Button>
     <Button cor="cyan">SEQUÊNCIA</Button>
