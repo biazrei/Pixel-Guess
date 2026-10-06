@@ -5,6 +5,7 @@ type ButtonProps ={
     children: ReactNode;
     cor: string;
     onClick?: () => void;
+
 };
 
 export default function Button (props: ButtonProps){

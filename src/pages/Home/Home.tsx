@@ -1,11 +1,15 @@
 import Title from "../../components/Title/Title";
 import Text from "../../components/Text/Text";
 import Button from "../../components/Button/Button";
-import "./Home.css"
 import { useNavigate } from "react-router";
+import "./Home.css"
+
 
 
 export default function Home() {
+    const navigate = useNavigate();
+
+
     return ( 
     <main className="home">
     <div className="home__text">
@@ -16,7 +20,7 @@ export default function Home() {
     <Button cor="pink">IMAGEM DO DIA </Button>
     <Button cor="cyan">SEQUÊNCIA</Button>
     <Button cor="purple">MULTIPLAYER</Button>
-    <Button cor="green" onClick={}>ENTRAR</Button>
+    <Button cor="green" onClick={() => navigate("/login")}>ENTRAR</Button>
     </div>
     </main>
  )
