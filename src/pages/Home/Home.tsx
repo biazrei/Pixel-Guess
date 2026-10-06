@@ -8,7 +8,7 @@ export default function Home() {
         <main className="home">
         <Title> Pixel Guess </Title>
     <Text> Adivinhe a imagem oculta </Text>
-    <div> className="home__button"
+    <div className="home__button">
     <Button cor="pink">IMAGEM DO DIA </Button>
     <Button cor="cyan">SEQUÊNCIA</Button>
     <Button cor="purple">MULTIPLAYER</Button>
