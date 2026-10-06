@@ -1,0 +1,7 @@
+.text {
+    color: var(--text-secondary);
+    font-family: var(--font-secondary);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px
+}

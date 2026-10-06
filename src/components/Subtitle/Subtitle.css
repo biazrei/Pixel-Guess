@@ -1,0 +1,8 @@
+.subtitle {
+    color: var(--text);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-subtitle);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
