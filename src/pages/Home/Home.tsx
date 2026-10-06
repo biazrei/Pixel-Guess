@@ -3,6 +3,7 @@ import Text from "../../components/Text/Text";
 import Button from "../../components/Button/Button";
 import "./Home.css"
 
+
 export default function Home() {
     return ( 
     <main className="home">
