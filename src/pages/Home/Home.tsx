@@ -10,7 +10,6 @@ export default function Home() {
     <Title> Pixel Guess </Title>
     <Text> Adivinhe a imagem oculta </Text>
      </div>
-
     <div className="home__buttons">
     <Button cor="pink">IMAGEM DO DIA </Button>
     <Button cor="cyan">SEQUÊNCIA</Button>
