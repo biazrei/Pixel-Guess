@@ -1,18 +1,61 @@
 button{
     background-color: transparent;
-    border: 2px solid var(--pink);
+    border: 2px solid var(--white);
     color: var(--text);
     font-family: var(--font-primary);
-    font-size: var(--font-button);
+    font-size: var(--font-size-button);
     border-radius: 6px;
     padding: 16px;
     cursor: pointer;
     transition: 0.2s;
-    box-shadow: 0 0 10px rgba(255, 0, 85, 0.15);
     width: 100%;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
+
+button:hover {
+    background: var(--white);
+    box-shadow:0 0 20px var(--white);
+    color: var(--background);
+    transform: translateY(-2px);
+}
+
+.button--pink {
+    border: 2px solid var(--pink);
+ box-shadow: 0 0 10px rgba(255, 0, 85, 0.15);
+}
+.button--pink:hover {
+background: var(--pink);
+box-shadow: 0 0 20px var(--pink);
+}
+
+
+.button--cyan {
+    border: 2px solid var(--cyan);
+ box-shadow: 0 0 10px rgba(12, 248, 252, 0.15);
+}
+.button--cyan:hover {
+background: var(--cyan);
+box-shadow: 0 0 20px var(--cyan);
+}
+
+.button--purple {
+    border: 2px solid var(--purple);
+ box-shadow: 0 0 10px rgba(171, 35, 245, 0.15);
+}
+.button--purple:hover {
+background: var(--purple);
+box-shadow: 0 0 20px var(--purple);
+}
+
+.button--green {
+    border: 2px solid var(--green);
+ box-shadow: 0 0 10px rgba(35, 245, 46, 0.15);
+}
+.button--green:hover {
+background: var(--green);
+box-shadow: 0 0 20px var(--green);
 }

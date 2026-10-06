@@ -1,0 +1,9 @@
+.title { 
+    font-family: var(--font-primary);
+    font-size: var(--font-size-title);
+    color: var(--cyan);
+    text-shadow: 3px 3px var(--pink);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
