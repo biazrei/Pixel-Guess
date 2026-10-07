@@ -12,7 +12,7 @@ export default function Recuperar(){
         <main className='recuperar'>
             <div className='recuperar__text'>
             <Title> PIXEL GUESS</Title>
-            <Text> RECUPERAR SENHA </Text>
+            <Text> Recuperar senha </Text>
             </div>
 
             <form className='recuperar__form'>

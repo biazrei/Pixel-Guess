@@ -12,8 +12,8 @@ export default function Registro(){
         
         <main className='registro'>
         <div className='registro__text'>
-            <Title> Pixel Guess</Title>
-            <Text>CRIAR CONTA</Text>
+            <Title> PIXEL GUESS</Title>
+            <Text>Criar conta</Text>
             <Text>Já tem uma conta? 
                 <Link to="/login" className='link'> Entrar</Link>
             </Text>

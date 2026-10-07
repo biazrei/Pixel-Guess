@@ -13,7 +13,7 @@ export default function Home() {
     return ( 
     <main className="home">
     <div className="home__text">
-    <Title> Pixel Guess </Title>
+    <Title> PIXEL GUESS </Title>
     <Text> Adivinhe a imagem oculta </Text>
      </div>
     <div className="home__buttons">

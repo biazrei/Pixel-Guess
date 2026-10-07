@@ -13,8 +13,8 @@ export default function Login (){
         <main className='login'>
            
             <div className='login__text'>
-            <Title> Pixel Guess</Title>
-            <Text>ENTRAR</Text>
+            <Title> PIXEL GUESS</Title>
+            <Text>Entrar</Text>
             <Text>Não tem uma conta? 
                 <Link to= "/registro" className='link'> Cadastre-se</Link>
             </Text>
