@@ -1,6 +1,6 @@
-Input {
+.input {
     background-color: transparent;
-    border: 2px solid var(--green);
+    border: 2px solid var(--purple);
     border-radius: 8px;
     color: var(--text);
     font-family: var(--font-secondary);

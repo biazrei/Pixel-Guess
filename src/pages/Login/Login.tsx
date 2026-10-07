@@ -14,7 +14,7 @@ export default function Login (){
             <Text>ENTRAR</Text>
             <Input type='email' placeholder='Digite seu e-mail'/>
              <Input type='password' placeholder='Digite sua senha'/>
-             <Button type='submit'>ENTRAR</Button>
+             <Button type='submit' cor='green'>ENTRAR</Button>
 
 
             <Button onClick={() => navigate("/")}>Voltar</Button>
