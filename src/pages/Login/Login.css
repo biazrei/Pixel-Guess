@@ -1,4 +1,4 @@
-.form {
+.login {
     max-width:800px;
     min-height: 450px;
     width: 90%;
@@ -30,7 +30,7 @@
 }
 
 @media (max-width: 600px) {
-  .form {
+  .login {
     width: 90%;
     max-width: 400px;
     min-height: 500px;

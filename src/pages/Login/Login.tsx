@@ -9,21 +9,19 @@ export default function Login (){
     const navigate = useNavigate()
     
     return(
-        <main className='form'>
+        <main className='login'>
            
             <div className='login__text'>
             <Title> Pixel Guess</Title>
             <Text>ENTRAR</Text>
-            <Button onClick={() => navigate("/")}>Voltar</Button>
             </div>
              
 
             <form className='login__buttons'>
-            <Input type='email' placeholder='Digite seu e-mail'/>
-
+             <Input type='email' placeholder='Digite seu e-mail'/>
              <Input type='password' placeholder='Digite sua senha'/>
-
              <Button type='submit' cor='green'>ENTRAR</Button>
+             <Button type='button' onClick={() => navigate("/")}>VOLTAR</Button>
             </form>
        
         </main>
