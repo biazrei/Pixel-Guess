@@ -7,12 +7,17 @@ export default function Login (){
     const navigate = useNavigate()
     
     return(
-
-        <main>
+        <form>
             <h1>Login</h1>
-            <Input/>
+            <Input type='email' placeholder='Digite seu e-mail'/>
+             <Input type='password' placeholder='Digite sua senha'/>
+             <Button type='submit'>ENTRAR</Button>
+
+
             <Button onClick={() => navigate("/")}>Voltar</Button>
 
-        </main>
+        
+        </form>
+
     )
 }
