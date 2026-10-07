@@ -1,0 +1,10 @@
+Input {
+    background-color: transparent;
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-text);
+    padding: 16px;
+
+}

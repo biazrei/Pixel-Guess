@@ -4,7 +4,7 @@ button{
     color: var(--text);
     font-family: var(--font-primary);
     font-size: var(--font-size-button);
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 16px;
     cursor: pointer;
     transition: 0.2s;

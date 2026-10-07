@@ -1,6 +1,7 @@
 import './Input.css'
 
 
+
 type InputProps = {
     type?:"email"|"password"|"text"
     placeholder?: string 
