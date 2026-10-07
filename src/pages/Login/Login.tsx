@@ -10,19 +10,22 @@ export default function Login (){
     
     return(
         <main className='form'>
+           
             <div className='login__text'>
             <Title> Pixel Guess</Title>
             <Text>ENTRAR</Text>
-            </div>
-
-            <div className='home__buttons'>
-            <Input type='email' placeholder='Digite seu e-mail'/>
-             <Input type='password' placeholder='Digite sua senha'/>
-             
-            <Button type='submit' cor='green'>ENTRAR</Button>
             <Button onClick={() => navigate("/")}>Voltar</Button>
             </div>
-        
+             
+
+            <form className='login__buttons'>
+            <Input type='email' placeholder='Digite seu e-mail'/>
+
+             <Input type='password' placeholder='Digite sua senha'/>
+
+             <Button type='submit' cor='green'>ENTRAR</Button>
+            </form>
+       
         </main>
 
     )
