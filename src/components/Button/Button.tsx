@@ -3,7 +3,7 @@ import "./Button.css"
 
 type ButtonProps ={
     children: ReactNode;
-    cor: string;
+    cor?: string;
     onClick?: () => void;
 
 };

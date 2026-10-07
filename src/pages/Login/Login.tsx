@@ -9,7 +9,7 @@ export default function Login (){
 
         <main>
             <h1>Login</h1>
-            <Button cor='pink' onClick={() => navigate("/")}>Voltar para a home</Button>
+            <Button onClick={() => navigate("/")}>Voltar</Button>
 
         </main>
     )
