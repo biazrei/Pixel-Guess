@@ -4,6 +4,7 @@ import Button from '../../components/Button/Button'
 import Input from '../../components/Input/Input'
 import Title from '../../components/Title/Title'
 import Text from '../../components/Text/Text'
+import { Link } from 'react-router'
 
 export default function Login (){
     const navigate = useNavigate()
@@ -14,6 +15,9 @@ export default function Login (){
             <div className='login__text'>
             <Title> Pixel Guess</Title>
             <Text>ENTRAR</Text>
+            <Text>Não tem uma conta? 
+                <Link to= "/registro" className='link'> Cadastre-se</Link>
+            </Text>
             </div>
              
 

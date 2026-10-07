@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router"
 import Login from "./pages/Login/Login"
 import Sequencia from "./pages/Sequencia/Sequencia"
 import ImagemDoDia from "./pages/Imagem do dia/Imagem-do-dia"
+import Registro from "./pages/Registro/Registro"
 
 
 export default function App(){
@@ -16,7 +17,9 @@ export default function App(){
     <Route path="/multiplayer" element={<Multiplayer/>}/>
     <Route path="/sequencia" element={<Sequencia/>}/>
     <Route path="/ImagemDoDia" element={<ImagemDoDia/>}/>
+    <Route path="/registro" element={<Registro/>}/>
     </Routes>
+    
   
 
   )

@@ -1,4 +1,4 @@
-.login {
+.registro{
     max-width:800px;
     min-height: 450px;
     width: 90%;
@@ -13,14 +13,14 @@
     margin: 0 auto;
 }
 
-.login__text{
+.registro__text{
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
 }
 
-.login__buttons {
+.registro__buttons{
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -28,17 +28,8 @@
     max-width: 320px;
 }
 
-.link{
-  text-decoration: none;
-  color: var(--white);
-  transition: 0.5s;
-}
-.link:hover{
-  color: var(--cyan);
-}
-
 @media (max-width: 600px) {
-  .login {
+  .registro {
     width: 90%;
     max-width: 400px;
     min-height: 500px;
@@ -47,7 +38,7 @@
     padding: 2rem;
   }
 
-  .login__buttons {
+  .registro__buttons {
     max-width: 320px;
   }
 }
