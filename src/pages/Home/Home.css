@@ -6,7 +6,6 @@
     grid-template-columns: 1fr 1fr;
     align-items: center;
     gap: 3rem;
-    padding: 3rem;
     border: 2px solid var(--pink);
     box-shadow: 0 0 10px rgba(255, 0, 85, 0.15);
     padding: 2rem;
