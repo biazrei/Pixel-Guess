@@ -18,12 +18,18 @@ export default function Login (){
             <Text>Não tem uma conta? 
                 <Link to= "/registro" className='link'> Cadastre-se</Link>
             </Text>
+            <Text>
+                <Link to="/recuperar-senha" className='link'>Esqueci minha senha</Link>
+            </Text>
+            
+            
             </div>
              
 
             <form className='login__buttons'>
              <Input type='email' placeholder='Digite seu e-mail'/>
              <Input type='password' placeholder='Digite sua senha'/>
+             
              <Button type='submit' cor='green'>ENTRAR</Button>
              <Button type='button' onClick={() => navigate("/")}>VOLTAR</Button>
             </form>

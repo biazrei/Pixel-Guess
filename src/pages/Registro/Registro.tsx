@@ -4,6 +4,7 @@ import Title from '../../components/Title/Title'
 import Input from '../../components/Input/Input'
 import Button from '../../components/Button/Button'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router'
 
 export default function Registro(){
     const navigate = useNavigate()
@@ -13,6 +14,9 @@ export default function Registro(){
         <div className='registro__text'>
             <Title> Pixel Guess</Title>
             <Text>CRIAR CONTA</Text>
+            <Text>Já tem uma conta? 
+                <Link to="/login" className='link'> Entrar</Link>
+            </Text>
             </div>
              
 
