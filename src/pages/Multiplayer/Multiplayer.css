@@ -131,7 +131,7 @@
     .multiplayer {
         width: 90%;
         max-width: 400px;
-        min-height: 500px;
+        height: 650px;
         padding: 2rem;
     }
     .multiplayer__header {
