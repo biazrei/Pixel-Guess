@@ -1,6 +1,6 @@
 .home {
-    max-width:675px;
-    height: 450px;
+    max-width:90vw;
+    height: 90vh;
     width: 90%;
     display: grid;
     grid-template-columns: 1fr 1fr;
