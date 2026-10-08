@@ -11,19 +11,16 @@ export default function ImagemDoDia () {
     
     return (
          <main className='imgdia'>
-           
-            <div className='imgdia__info'>
-            
-            <GameContainer/>
+            <div className='imgdia__grid'>
+             <GameContainer />
             </div>
-             
-
+            
             <form className='imgdia__form'>
-                <Subtitle> IMAGEM DO DIA </Subtitle>
+            <Subtitle> IMAGEM DO DIA </Subtitle>
             <Text>Pontos</Text>
-             <Input type='text' placeholder='Digite sua resposta'/>
-             <Button type='submit' cor='green'>ENVIAR </Button>
-             <Button type='button' onClick={() => navigate("/")}>SAIR</Button>
+            <Input type='text' placeholder='Digite sua resposta'/>
+            <Button type='submit' cor='green'>ENVIAR </Button>
+            <Button type='button' onClick={() => navigate("/")}>SAIR</Button>
             </form>
        
         </main>
