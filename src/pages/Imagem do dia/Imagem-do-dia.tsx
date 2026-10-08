@@ -13,13 +13,14 @@ export default function ImagemDoDia () {
          <main className='imgdia'>
            
             <div className='imgdia__info'>
-            <Subtitle> IMAGEM DO DIA </Subtitle>
-            <Text>Pontos</Text>
+            
             <GameContainer/>
             </div>
              
 
             <form className='imgdia__form'>
+                <Subtitle> IMAGEM DO DIA </Subtitle>
+            <Text>Pontos</Text>
              <Input type='text' placeholder='Digite sua resposta'/>
              <Button type='submit' cor='green'>ENVIAR </Button>
              <Button type='button' onClick={() => navigate("/")}>SAIR</Button>
