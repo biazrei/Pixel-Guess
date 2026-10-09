@@ -1,7 +1,6 @@
 .recuperar {
-    width:90vw;
-    height: 90vh;
-    width: 90%;
+    height:  70vh;
+    width: 70vw;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -31,7 +30,7 @@
 }
 
 @media (max-width: 600px) {
-    .recuperar {
+     .recuperar {
         width: 90%;
         max-width: 375px;
         height: 650px;
@@ -40,7 +39,7 @@
         padding: 1.5rem;
         align-items: center;
     }
-    .recuperar__text {
+     .recuperar__text {
         gap: 0.7rem;
     }
     .recuperar__form {

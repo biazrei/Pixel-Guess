@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import "./Button.css"
 
+
 type ButtonProps ={
     children: ReactNode;
     cor?: string;

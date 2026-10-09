@@ -1,7 +1,6 @@
 .registro{
-    width:90vw;
-    height: 90vh;
-    width: 90%;
+    height:  70vh;
+    width: 70vw;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -33,7 +32,7 @@
 
 
 @media (max-width: 600px) {
-  .registro {
+   .registro {
     width: 90%;
     max-width: 400px;
     min-height: 650px;
@@ -41,7 +40,6 @@
     gap: 2rem;
     padding: 2rem;
   }
-
   .registro__buttons {
     max-width: 320px;
   }

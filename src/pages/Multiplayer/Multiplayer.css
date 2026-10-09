@@ -1,7 +1,6 @@
 .multiplayer {
-    width:675px;
-    max-width: 90vw;
-    min-height: 450px;
+    height:  70vh;
+    width: 70vw;
     display: flex;
     flex-direction: column;
     border: 2px solid var(--pink);

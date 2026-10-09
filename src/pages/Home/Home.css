@@ -1,7 +1,6 @@
 .home {
-    max-width:90vw;
-    height: 90vh;
-    width: 90%;
+    height:  70vh;
+    width: 70vw;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -33,15 +32,12 @@
 
 @media (max-width: 600px) {
   .home {
-    width: 90%;
-    height: 650px;
-    max-width: 400px;
-    min-height: 600px;
+    width: 90vw;
+    height: 90vh;
     grid-template-columns: 1fr;
     gap: 2rem;
     padding: 2rem;
   }
-
   .home__buttons {
     max-width: 320px;
   }

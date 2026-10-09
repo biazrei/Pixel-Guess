@@ -3,6 +3,7 @@ import Text from "../../components/Text/Text";
 import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router";
 import "./Home.css"
+import '../../styles/global.css'
 
 
 
