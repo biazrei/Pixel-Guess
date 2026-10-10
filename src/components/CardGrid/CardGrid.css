@@ -9,7 +9,6 @@
     top: 0;
     left: 0;
     
-
 }
 .card{
   width: 100%;
@@ -17,3 +16,10 @@
   border: 1px solid var(--color-border);
   background-color: var(--background);
 }
+
+.card--revelado{
+  background-color: transparent;
+  border:none;
+  transition: 1s;
+}
+
