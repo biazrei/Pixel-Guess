@@ -4,18 +4,13 @@
   height: 500px;
   aspect-ratio: 1;
   display: flex;
-  flex-direction: column;
-    
-    
-  
-  
+  flex-direction: column;   
 }
 
 .game-container img {
   width: 100%;
   height: 100%;
   display: block;
-
 }
 
 @media (max-width: 600px) {

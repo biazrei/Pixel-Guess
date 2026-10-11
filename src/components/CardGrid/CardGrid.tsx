@@ -1,25 +1,20 @@
-import { useState } from 'react'
 import './CardGrid.css'
 
-export default function CardGrid(){
+type CardClickProps ={
+    onClick?:(index: number) => void
+    cardsRevelados: number[];
+};
+
+export default function CardGrid (props: CardClickProps){
     const cards = Array.from({ length: 16})
-    const [cardsRevelados, setCardsRevelados] =useState<number[]>([]);
-    
-
-    function ClicarCard (index: number) { 
-    if (cardsRevelados.includes(index)) {
-        return;
-    }
-    {setCardsRevelados([...cardsRevelados, index]);}
-    }
-    
-
     return(
         <div className="card-grid">
             {cards.map((_, index) => (
-                 <div  className={`card ${cardsRevelados.includes(index) ? "card--revelado" : ""}`}
-          key={index}
-          onClick={() => ClicarCard(index)}></div>
+                 <div className={`card ${props.cardsRevelados.includes(index)? "card--revelado": ""}`} 
+                 key={index} 
+                 onClick={() => {props.onClick?.(index);
+}}
+                 ></div>
             ))}
         </div>
-    );}
+    )}

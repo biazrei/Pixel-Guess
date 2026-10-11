@@ -4,7 +4,8 @@ import Button from '../../components/Button/Button'
 import Input from '../../components/Input/Input'
 import Subtitle from '../../components/Subtitle/Subtitle'
 import Text from '../../components/Text/Text'
-import GameContainer from '../../components/GameContainer/Game.Container'
+import '../../Jogos/JImagem do dia/JogoDia'
+import JogoDia from '../../Jogos/JImagem do dia/JogoDia'
 
 export default function ImagemDoDia () {
     const navigate = useNavigate()
@@ -12,7 +13,7 @@ export default function ImagemDoDia () {
     return (
          <main className='imgdia'>
             <div className='imgdia__grid'>
-             <GameContainer />
+            <JogoDia/>
             </div>
             
             <form className='imgdia__form'>

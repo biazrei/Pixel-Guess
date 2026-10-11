@@ -1,13 +1,11 @@
 import type { ReactNode } from "react"
 import "./Button.css"
 
-
 type ButtonProps ={
     children: ReactNode;
     cor?: string;
     onClick?: () => void;
     type?:"button"|"submit"
-
 };
 
 export default function Button (props: ButtonProps){
