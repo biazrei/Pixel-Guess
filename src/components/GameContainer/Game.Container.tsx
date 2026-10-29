@@ -5,14 +5,20 @@ type GameContainerProps = {
   imagem:string
   onCardClick?: (index:number) => void;
   cardsrevelados: number[];
+  respostaCorreta: boolean;
+  
 }
 export default function GameContainer(props: GameContainerProps) {
   return (
     <div className="game-container">
-        <img src={props.imagem} alt="Imagem do jogo" />
+        <img 
+        className={`game-container__imagem ${ props.respostaCorreta ? "game-container__imagem--revelada":""}`}
+        src={props.imagem} 
+        alt="Imagem do jogo" />
         <CardGrid  
         onClick={props.onCardClick}
-        cardsRevelados={props.cardsrevelados}/>
+        cardsRevelados={props.cardsrevelados}
+        respostaCorreta={props.respostaCorreta}/>
     </div>
   )
 }
