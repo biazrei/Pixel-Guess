@@ -27,22 +27,26 @@ export default function ImagemDoDia () {
             
             <form className='imgdia__form'
             onSubmit={(evento) => {
-                evento.preventDefault();if (resposta.trim().toUpperCase() === "GATO") 
+                evento.preventDefault();
+                if (estadoJogo !== "jogando") {return;}
+                if (resposta.trim().toUpperCase() === "GATO") 
                     { setResultado("correta"); setEstadoJogo("vitoria");} else {setResultado("errada");setResposta(""); if (ultimaTentativa) {setEstadoJogo("derrota");} else {setTimeout(() => {setResultado("");}, 1000);}}
                 
             }}
             >
             <Subtitle> IMAGEM DO DIA </Subtitle>
             <Subtitle>PONTOS: {pontos}</Subtitle>
-            {ultimaTentativa && resultado !== "correta" && (<Text cor="aviso">1 TENTATIVA RESTANTE</Text >)}
-            {resultado === "correta" && (
-            <Text cor="parabens" >VOCÊ ACERTOU!</Text>)}<Input type='text' placeholder='Digite sua resposta'
+            
+            {ultimaTentativa && estadoJogo === "jogando" && (<Text cor="aviso">1 TENTATIVA RESTANTE</Text >)}
+            {estadoJogo === "vitoria" && (<Text cor="parabens">VOCÊ ACERTOU!</Text>)}
+            {estadoJogo === "derrota" && (<Text cor="aviso">VOCÊ PERDEU!</Text>)}
+            <Input type='text' placeholder='Digite sua resposta'
             value={resposta}
             onChange={setResposta}
             estado={resultado}
-            disabled={resultado === "correta"}
+            disabled={estadoJogo !== "jogando"}
             />
-            {resultado !== "correta" && (
+            {estadoJogo === "jogando" && (
             <Button type='submit' cor='green'> ENVIAR </Button>)}
             <Button type='button' onClick={() => navigate("/")}>SAIR</Button>
             </form>
