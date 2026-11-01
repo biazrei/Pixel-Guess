@@ -16,6 +16,12 @@
 
 .input--correta:disabled{
     border-color: var(--green);
+    text-transform: uppercase;
+    text-align: center;
+    font-family: var(--font-primary);
+    background-color: var(--green);
+    color: var(--background);
+
 }
 
 .input--errada:focus{

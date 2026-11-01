@@ -3,7 +3,7 @@ import './CardGrid.css'
 type CardClickProps ={
     onClick?:(index: number) => void
     cardsRevelados: number[];
-    respostaCorreta: boolean;
+    estadoJogo:"jogando"|"vitoria"|"derrota";
 };
 
 export default function CardGrid (props: CardClickProps){
@@ -11,7 +11,7 @@ export default function CardGrid (props: CardClickProps){
     return(
         <div className="card-grid">
             {cards.map((_, index) => (
-                 <div className={`card ${props.respostaCorreta || props.cardsRevelados.includes(index) ? "card--revelado": ""}`}
+                 <div className={`card ${props.estadoJogo !=="jogando" || props.cardsRevelados.includes(index) ? "card--revelado": ""}`}
                  key={index} 
                  onClick={() => {props.onClick?.(index);
 }}

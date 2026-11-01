@@ -3,7 +3,7 @@ type InputProps = {
     type?:"email"|"password"|"text"
     placeholder?: string 
     value?: string
-    onChange?: (valor: string) => void
+    aoDigitar?: (valor: string) => void
     estado?:"correta"|"errada"|""
     disabled?:boolean
 }
@@ -14,7 +14,7 @@ export default function Input(props: InputProps){
        type={props.type} 
        placeholder={props.placeholder} 
        value={props.value}
-       onChange={(evento) => props.onChange?.(evento.target.value)}
+       onChange={(evento) => props.aoDigitar?.(evento.target.value)}
        disabled={props.disabled}
        />
 
