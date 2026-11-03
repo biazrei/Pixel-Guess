@@ -4,7 +4,7 @@ import Button from '../../components/Button/Button'
 import Input from '../../components/Input/Input'
 import Subtitle from '../../components/Subtitle/Subtitle'
 import Text from '../../components/Text/Text'
-import JogoDia from '../../Jogos/JImagem do dia/JogoDia'
+import JogoDia from '../../Jogos/jgdia/JogoDia'
 import { useState } from 'react'
 type EstadoJogo = "jogando"| "vitoria"| "derrota";
 

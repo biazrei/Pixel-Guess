@@ -16,18 +16,29 @@ export default function JogoDia({onPontosChange, estadoJogo,onUltimoCardRevelado
   
   const [pontos, setPontos] = useState<number>(1500);
   const [cardsRevelados, setCardsRevelados] = useState<number[]>([]);
-  const [imagens, setImagens] = useState<Imagem[]>([]);
+  const [imagemAtual, setImagemAtual] = useState<Imagem | null>(null);
+  const [erro, setErro] = useState<string | null>(null);
 
 useEffect(() => {
   async function buscarImagens() {
-    const resposta = await fetch("http://localhost:3000/api/imagens");
+    try{
+      const resposta = await fetch("http://localhost:3000/api/imagem-do-dia");
+
+      if(!resposta.ok){
+        throw new Error("Não foi possível buscar a imagem do dia.");
+      }
+
+      
+
+    }
+    
     const dados = await resposta.json();
-    setImagens(dados);}
+    setImagemAtual(dados);}
     buscarImagens();
 }, []);
   
 
-    const imagemAtual = imagens.find((imagem) => imagem.id === 2);
+  
 
   function ClicarCard(index: number) {
     if (cardsRevelados.includes(index)) {

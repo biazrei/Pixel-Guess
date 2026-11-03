@@ -20,7 +20,13 @@ pnpm-debug.log*
 **/.env
 **/.env.*
 
-# Editor
+# Editor e sistema
 .vscode/
 .idea/
 .DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+!.vscode/extensions.json
