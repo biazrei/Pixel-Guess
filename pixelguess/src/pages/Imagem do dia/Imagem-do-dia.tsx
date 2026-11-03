@@ -28,7 +28,7 @@ export default function ImagemDoDia () {
             onSubmit={(evento) => {
                 evento.preventDefault();
                 if (estadoJogo !== "jogando") {return;}
-                if (resposta.trim().toUpperCase() === "GATO") 
+                if (resposta.trim().toLowerCase() === "gato") 
                 {setResultado("correta"); setEstadoJogo("vitoria");} else {setResultado("errada");setResposta(""); 
                 if (ultimaTentativa) {
                 const novosPontos = Math.max(pontos - 100, 0);
