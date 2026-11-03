@@ -22,18 +22,20 @@ export default function JogoDia({onPontosChange, estadoJogo,onUltimoCardRevelado
 useEffect(() => {
   async function buscarImagens() {
     try{
-      const resposta = await fetch("http://localhost:3000/api/imagem-do-dia");
+       const resposta = await fetch("http://localhost:3000/api/imagem-do-dia");
 
-      if(!resposta.ok){
+      if (!resposta.ok) {
         throw new Error("Não foi possível buscar a imagem do dia.");
       }
 
-      
+      const dados = await resposta.json();
+      setImagemAtual(dados);
 
+    } catch (erro) {
+      setErro("Erro ao carregar a imagem do dia.");
+      console.error(erro);
     }
-    
-    const dados = await resposta.json();
-    setImagemAtual(dados);}
+  }
     buscarImagens();
 }, []);
   
@@ -58,13 +60,13 @@ useEffect(() => {
 
   return (
     <>
-    {imagemAtual && (
-      <GameContainer
-        imagem={`http://localhost:3000/${imagemAtual.caminho}`}
-        onCardClick={ClicarCard}
-        cardsrevelados={cardsRevelados}
-        estadoJogo={estadoJogo}/>
-    )}
+         {erro ? ( <p>{erro}</p>) : imagemAtual ? (
+          
+          <GameContainer
+          imagem={`http://localhost:3000/${imagemAtual.caminho}`}
+          onCardClick={ClicarCard}
+          cardsrevelados={cardsRevelados}
+          estadoJogo={estadoJogo}  />) : ( <p>Carregando imagem...</p> )}
   </>
   );
 }
