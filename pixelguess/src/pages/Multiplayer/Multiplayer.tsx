@@ -48,7 +48,7 @@ export default function Multiplayer() {
                 <div className="multiplayer__answer">
                     <Input type="text"/>
                     <Button type="button"
-                            cor="button--purple">
+                            cor="button--green">
                                 ENVIAR
                             </Button>
                 </div>

@@ -1,0 +1,55 @@
+.vencedor {
+    height:  70vh;
+    width: 70vw;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vencedor__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+.vencedor__title {
+    color: var(--purple);
+    font-size: 1.2rem;
+}
+
+.vencedor__username {
+    color: var(--white);
+    font-size: 0.9rem;
+}
+
+.vencedor__icon {
+    width: 80px;
+    height: 80px;
+    fill: none;
+    stroke: var(--purple);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+@media (max-width: 600px) {
+    .vencedor {
+        width: 90%;
+        max-width: 400px;
+        height: 650px;
+        padding: 1.5rem;
+    }
+    .vencedor__icon {
+        width: 65px;
+        height: 65px;
+    }
+    .vencedor__title {
+        font-size: 1rem;
+    }
+    .vencedor__username {
+        font-size: 0.8rem;
+    }
+}

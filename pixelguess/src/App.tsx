@@ -8,6 +8,10 @@ import Sequencia from "./pages/Sequencia/Sequencia"
 import ImagemDoDia from "./pages/Imagem do dia/Imagem-do-dia"
 import Registro from "./pages/Registro/Registro"
 import Recuperar from "./pages/Recuperar conta/Recuperar"
+import Modo from "./pages/Multiplayer/Modo"
+import CriarSala from "./pages/Multiplayer/Criar-sala"
+import EntrarSala from "./pages/Multiplayer/EntrarSala"
+import ModoAleatorio from "./pages/Multiplayer/Modo-aleatorio"
 
 
 export default function App(){
@@ -20,6 +24,10 @@ export default function App(){
     <Route path="/ImagemDoDia" element={<ImagemDoDia/>}/>
     <Route path="/registro" element={<Registro/>}/>
     <Route path="/recuperar-senha" element={<Recuperar/>}/>
+    <Route path="/escolha-modo" element={<Modo />} />
+    <Route path="/criar-sala" element={<CriarSala />} />
+    <Route path="/entrar-sala" element={<EntrarSala />} />
+    <Route path="/modo-aleatorio" element={<ModoAleatorio />} />
     </Routes>
     
   
