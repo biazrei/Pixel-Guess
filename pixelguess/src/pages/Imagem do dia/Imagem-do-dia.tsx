@@ -6,6 +6,7 @@ import Subtitle from '../../components/Subtitle/Subtitle'
 import Text from '../../components/Text/Text'
 import JogoDia from '../../Jogos/jgdia/JogoDia'
 import { useState } from 'react'
+
 type EstadoJogo = "jogando"| "vitoria"| "derrota";
 
 export default function ImagemDoDia () {
@@ -16,6 +17,41 @@ export default function ImagemDoDia () {
     const [ultimaTentativa, setUltimaTentativa] = useState(false);
     const [estadoJogo, setEstadoJogo] =
     useState<EstadoJogo>("jogando");
+   
+    async function envioResposta(evento: React.FormEvent) {
+        evento.preventDefault();
+        if (estadoJogo !== "jogando") {return;}
+
+        try {
+            const response = await fetch("http://localhost:3000/api/verificar-resposta", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", },
+                body: JSON.stringify({resposta: resposta}),
+             });
+
+             if (!response.ok) {
+                throw new Error("Erro ao validar resposta");
+             }
+
+             const dados = await response.json(); 
+             if(dados.acertou){
+                setResultado("correta")
+                setEstadoJogo("vitoria")
+             } else{
+                setResultado("errada")
+                setResposta("");
+
+                if (ultimaTentativa) {
+                    const novosPontos = Math.max(pontos - 100, 0);
+                    setPontos(novosPontos)
+                    setEstadoJogo("derrota")
+                } else { setTimeout(() => {setResultado ("")}, 1000);}
+             }
+        }
+     catch (erro) {
+        console.error("Erro na comunicação com o servidor:", erro)
+    }}
+
     return (
          <main className='imgdia'>
             <div className='imgdia__grid'>
@@ -25,17 +61,7 @@ export default function ImagemDoDia () {
             </div>
             
             <form className='imgdia__form'
-            onSubmit={(evento) => {
-                evento.preventDefault();
-                if (estadoJogo !== "jogando") {return;}
-                if (resposta.trim().toLowerCase() === "gato") 
-                {setResultado("correta"); setEstadoJogo("vitoria");} else {setResultado("errada");setResposta(""); 
-                if (ultimaTentativa) {
-                const novosPontos = Math.max(pontos - 100, 0);
-                setPontos(novosPontos);
-                setEstadoJogo("derrota");}
-                else {setTimeout(() => {setResultado("")}, 1000)}}  
-                }}>
+             onSubmit={envioResposta}>
                     
             <Subtitle> IMAGEM DO DIA </Subtitle>
             <Subtitle>PONTOS: {pontos}</Subtitle>

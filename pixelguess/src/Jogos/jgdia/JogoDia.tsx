@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import GameContainer from "../../components/GameContainer/Game.Container";
+import Text from "../../components/Text/Text";
 
 type Imagem = {
   id: number;
@@ -60,13 +61,13 @@ useEffect(() => {
 
   return (
     <>
-         {erro ? ( <p>{erro}</p>) : imagemAtual ? (
+         {erro ? ( <Text>{erro}</Text>) : imagemAtual ? (
           
           <GameContainer
           imagem={`http://localhost:3000/${imagemAtual.caminho}`}
           onCardClick={ClicarCard}
           cardsrevelados={cardsRevelados}
-          estadoJogo={estadoJogo}  />) : ( <p>Carregando imagem...</p> )}
+          estadoJogo={estadoJogo}  />) : ( <Text>Carregando imagem...</Text> )}
   </>
   );
 }
