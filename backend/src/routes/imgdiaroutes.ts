@@ -25,7 +25,11 @@ router.post("/api/verificar-resposta", (req, res) => {
 
     const acertou = respostaFormato === respostaReal;
 
-    return res.json({acertou})
+    return res.json({
+        acertou,
+        nomeResposta: registroBanco.nome 
+    
+    })
 })
 
 export default router;

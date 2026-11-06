@@ -14,9 +14,23 @@ export default function ImagemDoDia () {
     const [pontos, setPontos] =useState<number>(1500);
     const [resposta, setResposta] = useState("");
     const [resultado, setResultado] = useState<"correta" | "errada" | "">("");
-    const [ultimaTentativa, setUltimaTentativa] = useState(false);
-    const [estadoJogo, setEstadoJogo] =
-    useState<EstadoJogo>("jogando");
+    const [ultimaTentativa, setUltimaTentativa] = useState(false);const [nomeResposta, setNomeResposta] = useState("")
+
+    const obterDataHoje = () => {
+        return new Intl.DateTimeFormat("en-CA", {
+            timeZone: "America/Sao_Paulo",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }).format(new Date());};
+
+        const dataHoje = obterDataHoje();
+        const chaveVenceu =`pixel_guess_venceu_${dataHoje}`;const chaveNomeResposta = `pixel_guess_nome_resposta_${dataHoje}`;
+
+        const [estadoJogo, setEstadoJogo] = useState<EstadoJogo>(() => {
+        const jaVenceuHoje = localStorage.getItem(chaveVenceu);
+        return jaVenceuHoje === "true" ? "vitoria" : "jogando";
+    });
    
     async function envioResposta(evento: React.FormEvent) {
         evento.preventDefault();
@@ -37,6 +51,15 @@ export default function ImagemDoDia () {
              if(dados.acertou){
                 setResultado("correta")
                 setEstadoJogo("vitoria")
+
+             if (dados.nomeResposta) {
+                    setNomeResposta(dados.nomeResposta);
+                   localStorage.setItem(chaveNomeResposta, dados.nomeResposta);
+                }
+
+                localStorage.setItem(chaveVenceu, "true");
+
+                
              } else{
                 setResultado("errada")
                 setResposta("");
@@ -67,10 +90,13 @@ export default function ImagemDoDia () {
             <Subtitle>PONTOS: {pontos}</Subtitle>
             
             {ultimaTentativa && estadoJogo === "jogando" && (<Text cor="aviso">1 TENTATIVA RESTANTE</Text >)}
-            {estadoJogo === "vitoria" && (<Text cor="parabens">PARABÉNS, VOCÊ ACERTOU!</Text>)}
+            {estadoJogo === "vitoria" && (
+            <Text cor="parabens">
+            PARABÉNS, VOCÊ ACERTOU! É: {(nomeResposta || localStorage.getItem("pixel_guess_nome_resposta")||"").toUpperCase()}
+            </Text>
+            )}
             {estadoJogo === "derrota" && (<Text cor="aviso">NÃO FOI DESSA VEZ!</Text>)}
-            
-            {estadoJogo !== "derrota" && (
+            {estadoJogo === "jogando" && (
             <Input type='text' placeholder='Digite sua resposta'
             value={resposta}
             aoDigitar={setResposta}
