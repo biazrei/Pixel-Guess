@@ -20,7 +20,6 @@ export default function Sequencia() {
 
     return (
         <main className='sequencia'>
-            {/* Coluna Esquerda: Onde ficará o jogo/letras */}
             <div className='sequencia__grid'>
                 <div className="sequencia__letras">
                     {letras.map((letra, index) => (
@@ -29,13 +28,12 @@ export default function Sequencia() {
                 </div>
             </div>
             
-            {/* Coluna Direita: O Formulário exato da Imagem do Dia */}
+        
             <form className='sequencia__form'
                 onSubmit={(evento) => {
                     evento.preventDefault();
                     if (estadoJogo !== "jogando") { return; }
                     
-                    // Lógica provisória: se digitar "abcd" ganha
                     if (resposta.trim().toLowerCase() === "abcd") {
                         setResultado("correta"); setEstadoJogo("vitoria");
                     } else {
