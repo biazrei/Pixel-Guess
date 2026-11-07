@@ -27,7 +27,8 @@ router.post("/api/verificar-resposta", (req, res) => {
 
     return res.json({
         acertou,
-        nomeResposta: registroBanco.nome 
+        nomeResposta: registroBanco.nome, 
+        idImagem: imagemDoDia.id
     
     })
 })

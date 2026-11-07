@@ -17,11 +17,11 @@ const dataAtual = new Intl.DateTimeFormat("en-CA", {
 const inicio = new Date(`${dataInicial}T00:00:00Z`);
 const hoje = new Date(`${dataAtual}T00:00:00Z`);
 
-const diasPassados = Math.floor(
+let diasPassados = Math.floor(
   (hoje.getTime() - inicio.getTime()) / 86400000
 );
 
-
+diasPassados+=1
 const indiceImg = ((diasPassados % imagens.length) + imagens.length) % imagens.length;
 const imagemEscolhida= imagens[indiceImg];
 

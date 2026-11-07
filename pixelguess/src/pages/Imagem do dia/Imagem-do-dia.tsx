@@ -5,7 +5,7 @@ import Input from '../../components/Input/Input'
 import Subtitle from '../../components/Subtitle/Subtitle'
 import Text from '../../components/Text/Text'
 import JogoDia from '../../Jogos/jgdia/JogoDia'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 type EstadoJogo = "jogando"| "vitoria"| "derrota";
 
@@ -14,23 +14,27 @@ export default function ImagemDoDia () {
     const [pontos, setPontos] =useState<number>(1500);
     const [resposta, setResposta] = useState("");
     const [resultado, setResultado] = useState<"correta" | "errada" | "">("");
-    const [ultimaTentativa, setUltimaTentativa] = useState(false);const [nomeResposta, setNomeResposta] = useState("")
+    const [ultimaTentativa, setUltimaTentativa] = useState(false);const [nomeResposta, setNomeResposta] = useState("");
+    const [estadoJogo, setEstadoJogo] = useState<EstadoJogo>("jogando");
 
-    const obterDataHoje = () => {
-        return new Intl.DateTimeFormat("en-CA", {
-            timeZone: "America/Sao_Paulo",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-        }).format(new Date());};
+    useEffect(() => {
+        fetch("http://localhost:3000/api/imagem-do-dia") 
+            .then(res => res.json())
+            .then(dadosImagem => {
+                if (dadosImagem && dadosImagem.id) {
+                    const idAtual = dadosImagem.id;
+                    const ultimaIdVencida = localStorage.getItem("pixel_guess_venceu_id");
 
-        const dataHoje = obterDataHoje();
-        const chaveVenceu =`pixel_guess_venceu_${dataHoje}`;const chaveNomeResposta = `pixel_guess_nome_resposta_${dataHoje}`;
-
-        const [estadoJogo, setEstadoJogo] = useState<EstadoJogo>(() => {
-        const jaVenceuHoje = localStorage.getItem(chaveVenceu);
-        return jaVenceuHoje === "true" ? "vitoria" : "jogando";
-    });
+        
+                    if (ultimaIdVencida === String(idAtual)) {
+                        setEstadoJogo("vitoria");
+                        const nomeSalvo = localStorage.getItem(`pixel_guess_nome_${idAtual}`);
+                        if (nomeSalvo) setNomeResposta(nomeSalvo);
+                    }
+                }
+            })
+            .catch(err => console.error("Erro ao buscar imagem atual:", err));
+    }, []);
    
     async function envioResposta(evento: React.FormEvent) {
         evento.preventDefault();
@@ -53,11 +57,11 @@ export default function ImagemDoDia () {
                 setEstadoJogo("vitoria")
 
              if (dados.nomeResposta) {
-                    setNomeResposta(dados.nomeResposta);
-                   localStorage.setItem(chaveNomeResposta, dados.nomeResposta);
-                }
-
-                localStorage.setItem(chaveVenceu, "true");
+                    setNomeResposta(dados.nomeResposta);}
+              if (dados.idImagem) {
+                    localStorage.setItem("pixel_guess_venceu_id", String(dados.idImagem));
+                    localStorage.setItem(`pixel_guess_nome_${dados.idImagem}`, dados.nomeResposta);
+                }      
 
                 
              } else{

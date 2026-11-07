@@ -1,6 +1,6 @@
 import express from "express";
 import db from "./database/database.js";
-import { cadastrarImagens } from "./seeds/imgdia/imagens.js";
+import { cadastroImgDia } from "./seeds/imgdia/imagens.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use(router);
 
-cadastrarImagens();
+cadastroImgDia();
 
 app.use("/imagens/imgdia", express.static(caminhoImagens));
 
