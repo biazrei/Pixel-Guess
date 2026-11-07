@@ -20,27 +20,30 @@ export default function JogoDia({
   estadoJogo,
   onUltimoCardRevelado,
 }: JogoDiaProps) {
- const [cardsRevelados, setCardsRevelados] = useState<number[]>([]);
+  const [cardsRevelados, setCardsRevelados] = useState<number[]>([]);
   const [pontos, setPontos] = useState<number>(1500);
   
   function ClicarCard(index: number) {
     if (cardsRevelados.includes(index) || estadoJogo !== "jogando") {
       return;
     }
+    const UltimoCard = cardsRevelados.length === 15;
+  
+    if (cardsRevelados.length > 0 && !UltimoCard) {
+      const novosPontos = Math.max(pontos - 100, 0);
+      setPontos(novosPontos);
+      onPontosChange(novosPontos);
+    }
 
-    const ultimoCard = cardsRevelados.length === 15;
-    if (ultimoCard) {
+    if (UltimoCard) {
       onUltimoCardRevelado();
     }
 
-    const novosPontos = Math.max(pontos - 100, 0);
-    setPontos(novosPontos);
-    onPontosChange(novosPontos);
-
     setCardsRevelados([...cardsRevelados, index]);
   }
+
   return (
-   <>
+    <>
       {imagem ? (
         <GameContainer
           imagem={`http://localhost:3000/${imagem.caminho}`}
