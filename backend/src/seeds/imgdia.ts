@@ -1,7 +1,8 @@
-import db from "../../database/database.js";
+import db from "../database/database.js";
 
 export function cadastroImgDia() {
-  db.prepare(`
+  db.prepare(
+    `
     INSERT OR IGNORE INTO imagem_do_dia (nome, caminho)
     VALUES
     ('maçã', 'imagens/imgdia/img_00.png'),
@@ -35,5 +36,6 @@ export function cadastroImgDia() {
     ('melão', 'imagens/imgdia/img_28.png'),
     ('elefante', 'imagens/imgdia/img_29.png'),
     ('cuscuz', 'imagens/imgdia/img_30.jpg')
-  `).run();
+  `,
+  ).run();
 }
