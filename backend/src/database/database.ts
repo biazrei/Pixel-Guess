@@ -19,5 +19,16 @@ db.exec(`
   ON imagem_do_dia (nome);
 `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS imagens_sequencia (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    caminho TEXT NOT NULL);
+  `);
+db.exec(`
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_imagens_sequencia
+  ON imagens_sequencia (nome);
+  `);
+
 
 export default db;

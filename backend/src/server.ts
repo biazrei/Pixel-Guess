@@ -1,6 +1,7 @@
 import express from "express";
 import db from "./database/database.js";
 import { cadastroImgDia } from "./seeds/imgdia.js";
+import { cadastroImgSequencia } from "./seeds/sequencia.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(router);
 
 cadastroImgDia();
+cadastroImgSequencia();
 
 app.use("/imagens/imgdia", express.static(caminhoImagens));
 
@@ -29,6 +31,16 @@ app.get("/api/imagens", (req, res) => {
     .all();
 
   res.json(resultado);
+});
+
+//teste - tirar depois
+app.get("/imgsequencia", (req, res) => {
+  const sequencia = db
+    .prepare("SELECT id, nome, caminho FROM imagens_sequencia ORDER BY id ASC")
+    .all();
+  console.log(sequencia);
+
+  res.json(sequencia);
 });
 
 app.get("/api/imagem-do-dia", (req, res) => {
