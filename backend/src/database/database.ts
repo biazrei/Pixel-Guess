@@ -30,5 +30,23 @@ db.exec(`
   ON imagens_sequencia (nome);
   `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS sequencia_diaria (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    imagem_1 INTEGER NOT NULL,
+    imagem_2 INTEGER NOT NULL,
+    imagem_3 INTEGER NOT NULL,
+    
+  FOREIGN KEY (imagem_1) REFERENCES imagens_sequencia (id),
+  FOREIGN KEY (imagem_2) REFERENCES imagens_sequencia (id),
+  FOREIGN KEY (imagem_3) REFERENCES imagens_sequencia (id)
+    );
+`);
+
+db.exec(`
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_sequencia_diaria ON sequencia_diaria (imagem_1, imagem_2, imagem_3)
+  
+  `)
+
 
 export default db;

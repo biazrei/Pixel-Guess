@@ -64,3 +64,18 @@ export function cadastroImgSequencia(){
     `).run(nome, caminho);
 });
 }
+
+
+export function cadastroSequenciaDiaria(){
+    const imagensBanco =  db.prepare(" SELECT id FROM imagens_sequencia ORDER BY id ASC").all() as {id: number}[];
+    for (let i=0; i < imagensBanco.length; i +=3){
+        const imagem1 = imagensBanco[i].id;
+        const imagem2 = imagensBanco[i + 1].id;
+        const imagem3 = imagensBanco [i + 2].id;
+       
+        db.prepare(`
+        INSERT OR IGNORE INTO sequencia_diaria (imagem_1, imagem_2, imagem_3)
+        VALUES (?,?,?)
+        `).run(imagem1, imagem2, imagem3)
+        }   
+}

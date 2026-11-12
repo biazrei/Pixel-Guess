@@ -2,11 +2,13 @@ import express from "express";
 import db from "./database/database.js";
 import { cadastroImgDia } from "./seeds/imgdia.js";
 import { cadastroImgSequencia } from "./seeds/sequencia.js";
+import { cadastroSequenciaDiaria } from "./seeds/sequencia.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
 import { buscarImagem } from "./services/imgDiafuncionamento.js";
 import router from "./routes/imgdiaroutes.js";
+import { buscarImgSeq } from "./services/seqfuncionamento.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,10 +24,12 @@ app.use(router);
 
 cadastroImgDia();
 cadastroImgSequencia();
+cadastroSequenciaDiaria();
+
 
 app.use("/imagens/imgdia", express.static(caminhoImagens));
 
-app.get("/api/imagens", (req, res) => {
+app.get("/imagens", (req, res) => {
   const resultado = db
     .prepare("SELECT id, caminho FROM imagem_do_dia ORDER BY id ASC")
     .all();
@@ -33,7 +37,7 @@ app.get("/api/imagens", (req, res) => {
   res.json(resultado);
 });
 
-//teste - tirar depois
+//teste
 app.get("/imgsequencia", (req, res) => {
   const sequencia = db
     .prepare("SELECT id, nome, caminho FROM imagens_sequencia ORDER BY id ASC")
@@ -43,7 +47,23 @@ app.get("/imgsequencia", (req, res) => {
   res.json(sequencia);
 });
 
-app.get("/api/imagem-do-dia", (req, res) => {
+app.get ("/imgseqdiaria" , (req, res) => {
+  const seqdiaria = db.prepare("SELECT id, imagem_1, imagem_2, imagem_3 FROM sequencia_diaria ORDER BY id ASC").all();
+  console.log(seqdiaria);
+  res.json(seqdiaria);
+});
+
+app.get ("/sequencia-do-dia", (req, res) => {
+  const seqdia = buscarImgSeq();
+  
+  console.log(seqdia);
+  res.json(seqdia);
+})
+
+
+
+
+app.get("/imagem-do-dia", (req, res) => {
   const imagem = buscarImagem();
   if (!imagem) {
     return res.status(404).json({ mensagem: "Nenhuma imagem encontrada" });
