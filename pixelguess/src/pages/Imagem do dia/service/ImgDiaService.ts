@@ -10,7 +10,7 @@ type ResultadoResposta= {
 }
 
 export async function buscarImagemDoDia(): Promise<Imagem>{
-    try { const resposta = await fetch("http://localhost:3000/api/imagem-do-dia");
+    try { const resposta = await fetch("http://localhost:3000/imagem-do-dia");
 
         if (!resposta.ok) {
             throw new Error("Não foi possível buscar a imagem do dia");
