@@ -4,6 +4,18 @@ import {Router} from "express";
 
 const router = Router();
 
+router.get("/imagem-do-dia", (req, res) => {
+  const imagem = buscarImagem();
+  if (!imagem) {
+    return res.status(404).json({ mensagem: "Nenhuma imagem encontrada" });
+  }
+
+  return res.json({
+    id: imagem.id,
+    caminho: imagem.caminho,
+  });
+});
+
 router.post("/api/verificar-resposta", (req, res) => {  
     const {resposta} = req.body;
     if (!resposta) {

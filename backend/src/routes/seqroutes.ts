@@ -11,3 +11,4 @@ router.get("/imagens-sequencia", (req,res) => {
     return res.json(sequenciadoDia)
 }
 )
+export default router

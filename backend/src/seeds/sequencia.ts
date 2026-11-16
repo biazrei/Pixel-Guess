@@ -56,7 +56,7 @@ const imagens: ImagemSequencia[] = [
 export function cadastroImgSequencia(){
     imagens.forEach(({nome, extensao}, index) =>{
     const numero = index.toString().padStart(2, "0")
-    const caminho = (`imagens/sequencia/img_${numero}.${extensao}`)
+    const caminho = (`/img_${numero}.${extensao}`)
 
     db.prepare(`
         INSERT OR IGNORE INTO imagens_sequencia (nome, caminho)
