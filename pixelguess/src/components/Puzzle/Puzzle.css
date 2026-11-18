@@ -22,8 +22,10 @@
 .peca--selecionada{
     border: 3px solid var(--purple);
     transform: scale(1.05);
-    
 
-     
+}
+
+.peca--correta{
+    border: 3px solid var(--green);
 }
 

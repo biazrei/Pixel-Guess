@@ -21,19 +21,22 @@ export function buscarImgSeq(){
 
     const imgsSeqEscolhidas = imagensSeq[indiceImgSeq];
 
-    const caminhoImagens = db.prepare(
-        "SELECT caminho FROM imagens_sequencia WHERE id IN (?,?,?)").all(
+    const dadosImagens = db.prepare(
+        "SELECT caminho, nome FROM imagens_sequencia WHERE id IN (?,?,?)").all(
             imgsSeqEscolhidas.imagem_1,
             imgsSeqEscolhidas.imagem_2,
             imgsSeqEscolhidas.imagem_3
-        ) as {caminho:string}[];
+        ) as {caminho:string; nome:string}[];
     
 
     return{
-        imagem_1:caminhoImagens[0].caminho,
-        imagem_2:caminhoImagens[1].caminho,
-        imagem_3:caminhoImagens[2].caminho
-    }
+        imagem_1: dadosImagens[0].caminho,
+        resposta_1: dadosImagens[0].nome,
+        imagem_2: dadosImagens[1].caminho,
+        resposta_2: dadosImagens[1].nome,
+        imagem_3: dadosImagens[2].caminho,
+        resposta_3: dadosImagens[2].nome
+    };
 
 
 

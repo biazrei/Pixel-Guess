@@ -1,39 +1,48 @@
+import { useRef, useImperativeHandle, forwardRef } from "react";
+import Puzzle, {type PuzzleRef } from "../../../components/Puzzle/Puzzle";
 
-import Puzzle from "../../../components/Puzzle/Puzzle"
+type EstadoEtapa = "" | "jogando" | "encerrada";
 
-type EstadoEtapa = "" | "jogando" |"encerrada";
+type JogoSeqProps = {
+    imagem_1: string;
+    imagem_2: string;
+    imagem_3: string;
+    etapa: number;
+    estadoEtapa: EstadoEtapa;
+};
 
-type JogoSeqProps={
-     imagem_1: string;
-     imagem_2: string;
-     imagem_3: string;
-     etapa: number;
-     estadoEtapa: EstadoEtapa;
-     onEtapaEncerrada:() => void;
-    };
+export type JogoSeqRef = {
+    calcularPontosPuzzle: () => number;
+};
 
-export default function JogoSequencia (props: JogoSeqProps){
+const JogoSequencia = forwardRef<JogoSeqRef, JogoSeqProps>((props, ref) => {
+    const puzzleRef = useRef<PuzzleRef>(null);
 
     const imagemAtual =
-    props.etapa === 1 ? props.imagem_1:
-    props.etapa === 2 ? props.imagem_2:
-    props.imagem_3;
+        props.etapa === 1 ? props.imagem_1 :
+        props.etapa === 2 ? props.imagem_2 :
+        props.imagem_3;
 
-    
-    function encerrarEtapa(){
-        props.onEtapaEncerrada();
-    }
 
-    return(
+    useImperativeHandle(ref, () => ({
+        calcularPontosPuzzle: () => {
+            if (puzzleRef.current) {
+                return puzzleRef.current.calcularPontos();
+            }
+            return 0;
+        }
+    }));
+
+    return (
         <div>
             <Puzzle 
-            key={props.etapa}
-            imagem={imagemAtual}
-            bloqueado ={props.estadoEtapa === "encerrada"}
+                ref={puzzleRef}
+                key={props.etapa}
+                imagem={imagemAtual}
+                bloqueado={props.estadoEtapa === "encerrada"}
             />
-            <button onClick={(encerrarEtapa)}
-            >encerrar</button>
-           
-     </div>
-    )
-}
+        </div>
+    );
+});
+
+export default JogoSequencia;
