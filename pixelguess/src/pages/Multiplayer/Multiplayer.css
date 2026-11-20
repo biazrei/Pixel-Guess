@@ -1,5 +1,5 @@
 .multiplayer {
-    height:  70vh;
+    min-height: 70vh;
     width: 70vw;
     display: flex;
     flex-direction: column;
@@ -8,7 +8,7 @@
     padding: 2rem;
     border-radius: 8px;
     margin: 0 auto;
-    background-color: var(--background-secondary)
+    background-color: var(--background-secondary);
 }
 
 .multiplayer__header {
@@ -35,15 +35,6 @@
     box-shadow: none;
 }
 
-.back-icon {
-    display: block;
-    width: 8px;
-    height: 8px;
-    border-left: 4px solid var(--purple);
-    border-bottom: 4px solid var(--purple);
-    transform: rotate(45deg);
-}
-
 .multiplayer__back:hover {
     background: transparent;
     color: var(--pink);
@@ -51,11 +42,30 @@
     transform: none;
 }
 
+.multiplayer__players {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    color: var(--white);
+}
+
+.multiplayer__player {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    gap: 1rem;
+}
+
 .multiplayer__info {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
     margin: 1.5rem 0 1rem;
 }
 
@@ -86,27 +96,65 @@
     border-color: var(--purple);
 }
 
-.multiplayer__timer {
-    color: var(--text);
+.multiplayer__score {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--green);
     font-family: var(--font-secondary);
-    font-size: var(--font-size-text);
 }
 
 .multiplayer__board {
-    width: 85%;
-    height: 150px;
-    margin: 0 auto;
-    border: 2px solid var(--color-border);
-}
-
-.multiplayer__row {
+    position: relative;
     width: 100%;
-    height: 25%;
-    border-bottom: 2px solid var(--color-border);
+    max-width: 420px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+    border: 2px solid var(--purple);
+    box-shadow: 0 0 12px rgba(128, 0, 255, 0.2);
+    overflow: hidden;
 }
 
-.multiplayer__row:last-child {
-    border-bottom: none;
+.multiplayer__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.multiplayer__tiles {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+.multiplayer__tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    background-color: var(--background-secondary);
+    color: var(--purple);
+    font-family: var(--font-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.multiplayer__tile:hover:not(:disabled) {
+    background-color: var(--purple);
+    color: var(--white);
+}
+
+.multiplayer__tile--revealed {
+    opacity: 0;
+    cursor: default;
+}
+
+.multiplayer__tile:disabled {
+    cursor: default;
 }
 
 .multiplayer__answer {
@@ -122,50 +170,78 @@
     width: 100%;
 }
 
-.multiplayer__answer .button--purple {
-    background-color: var(--purple);
-    border: 2px solid var(--purple);
+.multiplayer__answer .button--green {
+    background-color: var(--green);
+    border: 2px solid var(--green);
+}
+
+.multiplayer__feedback,
+.multiplayer__next {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.multiplayer__next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.multiplayer__result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: auto;
+    text-align: center;
+}
+
+.multiplayer__message {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 @media (max-width: 600px) {
     .multiplayer {
         width: 90%;
         max-width: 400px;
-        height: 650px;
-        padding: 2rem;
+        min-height: 650px;
+        padding: 1.5rem;
     }
-    .multiplayer__header {
-        padding-bottom: 1rem;
-    }
+
     .multiplayer__info {
-        width: 100%;
         margin: 1.2rem 0 1rem;
     }
+
     .multiplayer__rounds {
         gap: 0.35rem;
     }
+
     .multiplayer__round {
         width: 14px;
         height: 14px;
     }
-    .multiplayer__timer {
-        font-size: 0.6rem;
-    }
+
     .multiplayer__board {
         width: 100%;
-        height: 150px;
-        margin: 0 auto;
     }
+
+    .multiplayer__tile {
+        font-size: 1.2rem;
+    }
+
     .multiplayer__answer {
-        width: 100%;
         max-width: none;
         margin: 1.2rem auto 0;
         gap: 0.8rem;
     }
-    .multiplayer__answer .input {
-        width: 100%;
-    }
-    .multiplayer__answer .button--purple {
+
+    .multiplayer__answer .input,
+    .multiplayer__answer .button--green {
         width: 100%;
     }
 }

@@ -19,8 +19,8 @@ export default function Home() {
      </div>
     <div className="home__buttons">
     <Button cor="pink" onClick={() => navigate("/ImagemDoDia")}>IMAGEM DO DIA </Button>
-    <Button cor="green" onClick={() => navigate("/sequencia")}>SEQUÊNCIA</Button>
-    <Button cor="purple" onClick={() => navigate("/escolha-modo")}>MULTIPLAYER</Button>
+    <Button cor="green" onClick={() => navigate("/Sequencia")}>SEQUÊNCIA</Button>
+    <Button cor="purple" onClick={() => navigate("/Salas")}>MULTIPLAYER</Button>
     </div>
     </main>
  )

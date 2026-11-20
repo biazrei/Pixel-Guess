@@ -22,4 +22,3 @@ export default function GameContainer(props: GameContainerProps) {
     </div>
   )
 }
-

@@ -6,12 +6,13 @@ type ButtonProps ={
     cor?: string;
     onClick?: () => void;
     type?:"button"|"submit"
+    disabled?: boolean;
 };
 
 export default function Button (props: ButtonProps){
     return (
     <button 
     type={props.type ?? "button" }
-    className={"button--" + props.cor} onClick={props.onClick}>
+    className={"button--" + props.cor} onClick={props.onClick} disabled={props.disabled}>
         {props.children}  </button>)
 }

@@ -9,13 +9,26 @@ import cors from "cors";
 import { buscarImagem } from "./services/imgDiafuncionamento.js";
 import router from "./routes/imgdiaroutes.js";
 import { buscarImgSeq } from "./services/seqfuncionamento.js";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
+import { configurarEventos } from "./multiplayer/eventos.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const caminhoImagens = path.join(__dirname, "../imagens/imgdia");
+const caminhoImagensMultiplayer = path.join(__dirname, "../imagens/imgmultiplayer");
 
 const PORT = 3000;
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+configurarEventos(io);
 
 app.use(cors());
 app.use(express.json());
@@ -28,6 +41,7 @@ cadastroSequenciaDiaria();
 
 
 app.use("/imagens/imgdia", express.static(caminhoImagens));
+app.use("/imagens/imgmultiplayer", express.static(caminhoImagensMultiplayer));
 
 app.get("/imagens", (req, res) => {
   const resultado = db
@@ -75,6 +89,6 @@ app.get("/imagem-do-dia", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Servidor funcionando na porta ${PORT}`);
 });
