@@ -3,6 +3,7 @@ import db from "./database/database.js";
 import { cadastroImgDia } from "./seeds/imgdia.js";
 import { cadastroImgSequencia } from "./seeds/sequencia.js";
 import { cadastroSequenciaDiaria } from "./seeds/sequencia.js";
+import { cadastroImgMultiplayer } from "./seeds/multiplayer.js";
 import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
@@ -10,11 +11,13 @@ import { buscarImagem } from "./services/imgDiafuncionamento.js";
 import imgdiarouter from "./routes/imgdiaroutes.js";
 import seqrouter from "./routes/seqroutes.js"
 import { buscarImgSeq } from "./services/seqfuncionamento.js";
+import multiplayerrouter from "./routes/multiplayerroutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const caminhoImagensDia = path.join(__dirname, "../imagens/imgdia");
 const caminhoImgsSeq = path.join (__dirname, "../imagens/imgseq")
+const caminhoImgsMultiplayer = path.join(__dirname, "../imagens/imgmultiplayer");
 
 const PORT = 3000;
 const app = express();
@@ -24,14 +27,16 @@ app.use(express.json());
 
 app.use(imgdiarouter);
 app.use(seqrouter);
+app.use(multiplayerrouter);
 
 cadastroImgDia();
 cadastroImgSequencia();
 cadastroSequenciaDiaria();
+cadastroImgMultiplayer();
 
 app.use("/imagens/imgdia", express.static(caminhoImagensDia));
 app.use("/imagens/imgseq", express.static(caminhoImgsSeq))
-
+app.use("/imagens/imgmultiplayer", express.static(caminhoImgsMultiplayer));
 
 //testes
 app.get("/imgsequencia", (req, res) => {

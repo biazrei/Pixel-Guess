@@ -1,9 +1,11 @@
 import "./Puzzle.css";
-import { useState, forwardRef, useImperativeHandle } from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
 type PuzzleProps = {
   imagem: string;
-  estadoEtapa: "jogando"| "encerrada";
+  estadoEtapa: "jogando" | "encerrada";
+  pastaImagem?: string;
+  onPontosChange?: (pontos: number)=> void;
 };
 
 export type PuzzleRef = {
@@ -26,19 +28,25 @@ const Puzzle = forwardRef<PuzzleRef, PuzzleProps>((props, ref) => {
 
   const [pecaSelecionada, setPecaSelecionada] = useState<number | null>(null);
 
-  useImperativeHandle(ref, () => ({
-    calcularPontos: () => {
-      let pecasCorretas = 0;
+  function calcularPontos() {
+    let pecasCorretas = 0;
 
-      ordemPecas.forEach((peca, index) => {
+    ordemPecas.forEach((peca, index) => {
         if (peca === index) {
-          pecasCorretas++;
+            pecasCorretas++;
         }
-      });
+    });
 
-      return pecasCorretas * 50; 
-    }
-  }));
+    return pecasCorretas * 50;
+}
+
+useImperativeHandle(ref, () => ({
+    calcularPontos
+}));
+
+useEffect(() => {
+    props.onPontosChange?.(calcularPontos());
+}, [ordemPecas, props.onPontosChange]);
 
   function selecionarPeca(index: number) {
     if (props.estadoEtapa === "encerrada") return;
@@ -82,9 +90,9 @@ const Puzzle = forwardRef<PuzzleRef, PuzzleProps>((props, ref) => {
             key={index}
             onClick={() => selecionarPeca(index)}
             style={{
-              backgroundImage: `url(http://localhost:3000/imagens/imgseq/${props.imagem})`,
-              backgroundPosition: `${(coluna * 100) / 3}% ${(linha * 100) / 3}%`,
-            }}
+  backgroundImage: `url(http://localhost:3000/imagens/${props.pastaImagem ?? "imgseq"}/${props.imagem})`,
+  backgroundPosition: `${(coluna / 3) * 100}% ${(linha / 3) * 100}%`,
+}}
           />
         );
       })}

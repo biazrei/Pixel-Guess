@@ -169,3 +169,45 @@
         width: 100%;
     }
 }
+
+.multiplayer .pecas--grid {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+}
+
+.multiplayer .pecas {
+    min-width: 0;
+    min-height: 0;
+}
+
+.multiplayer {
+    height: auto;
+    min-height: 70vh;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .multiplayer .pecas--grid {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
+}
+
+.multiplayer__puzzle {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.multiplayer__round--completed {
+    background-color: var(--purple);
+    border-color: var(--purple);
+}
+
+.multiplayer__round--active {
+    background-color: transparent;
+    border: 3px solid var(--pink);
+}

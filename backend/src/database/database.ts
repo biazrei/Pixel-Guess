@@ -54,5 +54,18 @@ db.exec(`
   
   `)
 
+  db.exec(`
+CREATE TABLE IF NOT EXISTS imagens_multiplayer (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    caminho TEXT NOT NULL
+);
+`);
+
+db.exec(`
+CREATE UNIQUE INDEX IF NOT EXISTS idx_imagens_multiplayer
+ON imagens_multiplayer (nome);
+`);
+
 
 export default db;
