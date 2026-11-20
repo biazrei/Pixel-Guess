@@ -79,6 +79,7 @@
 
 
 @media (max-width: 600px) {
+  /* ESTADO JOGANDO */
   .sequencia {
     width: 90%;
     max-width: 400px;
@@ -87,8 +88,45 @@
     gap: 2rem;
     padding: 2rem;
   }
+
   .seq__grid {
     align-items: center;
+    width: 100%;
+  }
+  
+  /* ESTADOS INÍCIO E ENCERRADA */
+  .seq__inicio {
+    width: 90vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+
+.inicio__info {
+    margin-top: 0;
+    width: 100%;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.seq__inicio .subtitle {
+    line-height: 1.5;
+}
+
+.inicio__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 320px;
+}
+
+  .seq__info {
     width: 100%;
   }
 }
