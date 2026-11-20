@@ -2,6 +2,7 @@ p {
     color: var(--text-secondary);
     font-family: var(--font-secondary);
     text-align: center;
+    
 }
 .text--aviso {
   color: #e00404;

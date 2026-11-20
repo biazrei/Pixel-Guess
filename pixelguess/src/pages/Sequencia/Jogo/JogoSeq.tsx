@@ -1,7 +1,7 @@
 import { useRef, useImperativeHandle, forwardRef } from "react";
 import Puzzle, {type PuzzleRef } from "../../../components/Puzzle/Puzzle";
 
-type EstadoEtapa = "" | "jogando" | "encerrada";
+type EstadoEtapa = "jogando" | "encerrada";
 
 type JogoSeqProps = {
     imagem_1: string;
@@ -12,7 +12,7 @@ type JogoSeqProps = {
 };
 
 export type JogoSeqRef = {
-    calcularPontosPuzzle: () => number;
+    calcularPontos: () => number;
 };
 
 const JogoSequencia = forwardRef<JogoSeqRef, JogoSeqProps>((props, ref) => {
@@ -25,7 +25,7 @@ const JogoSequencia = forwardRef<JogoSeqRef, JogoSeqProps>((props, ref) => {
 
 
     useImperativeHandle(ref, () => ({
-        calcularPontosPuzzle: () => {
+        calcularPontos: () => {
             if (puzzleRef.current) {
                 return puzzleRef.current.calcularPontos();
             }
@@ -39,7 +39,7 @@ const JogoSequencia = forwardRef<JogoSeqRef, JogoSeqProps>((props, ref) => {
                 ref={puzzleRef}
                 key={props.etapa}
                 imagem={imagemAtual}
-                bloqueado={props.estadoEtapa === "encerrada"}
+                estadoEtapa={props.estadoEtapa}
             />
         </div>
     );

@@ -3,7 +3,7 @@ import { useState, forwardRef, useImperativeHandle } from "react";
 
 type PuzzleProps = {
   imagem: string;
-  bloqueado: boolean;
+  estadoEtapa: "jogando"| "encerrada";
 };
 
 export type PuzzleRef = {
@@ -13,7 +13,14 @@ export type PuzzleRef = {
 const Puzzle = forwardRef<PuzzleRef, PuzzleProps>((props, ref) => {
   const [ordemPecas, setOrdemPecas] = useState(() => {
     const pecas = Array.from({ length: 16 }, (_, index) => index);
-    pecas.sort(() => Math.random() - 0.5);
+     
+      do  {for (let i = pecas.length - 1; i > 0; i--){ 
+      const j = Math.floor(Math.random() * (i + 1));
+      [pecas[i], pecas[j]] = [pecas[j], pecas[i]];
+    }
+
+} while (pecas.some((peca, index) => peca === index));
+
     return pecas;
   });
 
@@ -34,7 +41,7 @@ const Puzzle = forwardRef<PuzzleRef, PuzzleProps>((props, ref) => {
   }));
 
   function selecionarPeca(index: number) {
-    if (props.bloqueado) return;
+    if (props.estadoEtapa === "encerrada") return;
     if (pecaSelecionada === null) {
       setPecaSelecionada(index);
       return;
@@ -57,18 +64,20 @@ const Puzzle = forwardRef<PuzzleRef, PuzzleProps>((props, ref) => {
   }
 
   return (
-    <div className="pecas-grid">
+    <div className="pecas--grid">
       {ordemPecas.map((peca, index) => {
         const coluna = peca % 4;
         const linha = Math.floor(peca / 4);
         const pecaCorreta = peca === index;
-        const mostrarAcerto = props.bloqueado && pecaCorreta;
+        const mostrarAcerto = props.estadoEtapa === "encerrada" && pecaCorreta;
+        const blur = props.estadoEtapa === "jogando" && !pecaCorreta;
 
         return (
           <div
             className={`pecas 
               ${pecaSelecionada === index ? "peca--selecionada" : ""} 
               ${ mostrarAcerto? "peca--correta" : ""}
+              ${ blur? "peca--blur" : ""}
             `}
             key={index}
             onClick={() => selecionarPeca(index)}
