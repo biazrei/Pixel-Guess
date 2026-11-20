@@ -1,32 +1,168 @@
 import Button from "../../components/Button/Button"
-import Input from "../../components/Input/Input"
-import Text from "../../components/Text/Text"
-import Title from "../../components/Title/Title"
 import "./Sequencia.css"
 import { useNavigate } from "react-router"
+import { buscarImagensSeq } from "./Service/SeqService"
+import { useState, useEffect, useRef } from "react"
+import JogoSequencia, { type JogoSeqRef } from "./Jogo/JogoSeq"
+import Subtitle from "../../components/Subtitle/Subtitle"
+import Text from "../../components/Text/Text"
 
-export default function Sequencia(){
+export default function Sequencia() {
     const navigate = useNavigate();
-    return(
-        <main className="sequencia">
-            <div className="seq__grid">
-                <Title> GAME CONTAINER AQUI</Title>
-            </div>
+    const [imagensSeq, setImagensSeq] = useState({
+        imagem_1: "",
+        imagem_2: "",
+        imagem_3: "",
+        
+    });
+    
+    const [etapa, setEtapa] = useState(1);
+    const [estadoEtapa, setEstadoEtapa] = useState< "jogando" | "encerrada">("jogando");
+    const [estadoSequencia, setEstadoSequencia] = useState<"inicio"|"jogando" | "encerrada">("inicio");
+    const jogoSeqRef = useRef<JogoSeqRef>(null);
+    const [pontosTotal, setPontosTotal] = useState(0);
+    const [placarEtapa, setPlacarEtapa] =useState(0);
+    const [pontosEtapa, setPontosEtapa] = useState([0, 0, 0]);
+    const [tempo, setTempo]= useState(40);
 
-            <form className="seq__form">
-                <Text cor="aviso"> APENAS 1 TENTATIVA   </Text>
-                <Input
-                type="text"
-                placeholder="Digite sua resposta"
-                ></Input>
-                <Button type="submit" cor="green"> ENVIAR RESPOSTA</Button>
-                <Button type="button"
-                onClick={() => navigate("/")}>SAIR</Button>
+    useEffect(() => {
+        async function carregarDados() {
+            try {
+                const dados = await buscarImagensSeq();
+                setImagensSeq(dados);
+            } catch (erro) {
+                console.error("Erro ao carregar sequência:", erro);
+            }
+        }
+        carregarDados();
+    }, []);
 
-            </form>
+    useEffect (()=>{
+        if (estadoEtapa !== "jogando" || estadoSequencia !=="jogando"){
+            return;
+        }
+        const intervalo = setInterval(() => {
+    setTempo((tempoAtual) => {
+        if (tempoAtual <= 1) {
+            return 0;
+        }   return tempoAtual - 1;});
+    }, 1000);
 
+        return ()=> clearInterval(intervalo)
+}, [estadoEtapa, estadoSequencia]);
 
+useEffect(()=> {
+    if (tempo === 0 && estadoEtapa ==="jogando") {
+        verificarJogo();
+    }
+},);
+//[tempo] colocar dependencia depois
 
-        </main>
-    )
-}
+    function proximaEtapa() {
+        if (etapa < 3) {
+            setEtapa(etapa + 1);     
+            setEstadoEtapa("jogando");
+            setPlacarEtapa(0);
+            setTempo(40);
+        } else {
+            setEstadoSequencia("encerrada");
+        }
+    }
+
+    function verificarJogo(){
+       const pontosPuzzle = jogoSeqRef.current?.calcularPontos() || 0;
+       const pontuacao= [...pontosEtapa];
+       pontuacao[etapa-1]= pontosPuzzle;
+       setPontosEtapa(pontuacao)
+    setPlacarEtapa(pontosPuzzle)
+    setPontosTotal((prev) => prev + pontosPuzzle); 
+    setEstadoEtapa("encerrada");
+   
+    }
+
+    const minutos = Math.floor(tempo / 60);
+    const segundos = tempo % 60;
+    const minutosFormatados = String(minutos).padStart(2, "0");
+    const segundosFormatados = String(segundos).padStart(2, "0");
+    const tempoCritico = tempo <= 10;
+    const tempoAtencao = tempo <= 30 && tempo > 10;
+
+    return (
+        <div>
+            {estadoSequencia === "inicio" &&(
+           <div className="seq__inicio"> 
+                        
+                        <div className="inicio__info">
+                            <Subtitle>PREPARE-SE PARA O DESAFIO</Subtitle>
+                            <Text> Resolva os 3 quebra-cabeças e acumule pontos</Text>
+                            <Text> Quando a peça estiver na posição correta, o desfoque será removido</Text>
+                            <Text>Boa sorte! </Text>
+                            <Text cor="aviso">PS: CUIDADO COM O TEMPO</Text>
+                        </div>
+
+                        <div className="inicio__buttons">
+                          <Button type="button" cor="cyan" onClick={() => setEstadoSequencia("jogando")}>INICIAR</Button>
+                        <Button type="button" onClick={() => navigate("/")}>SAIR</Button>
+                        </div>  
+
+                    </div>)}
+
+            {estadoSequencia=== "jogando" && (
+                <main className="sequencia">
+                    <>
+
+                    <div className="seq__grid">
+                        <JogoSequencia
+                        
+                           key={etapa}
+                            ref={jogoSeqRef}
+                            imagem_1={imagensSeq.imagem_1}
+                            imagem_2={imagensSeq.imagem_2}
+                            imagem_3={imagensSeq.imagem_3}
+                            etapa={etapa}
+                            estadoEtapa={estadoEtapa}
+                        />
+                    </div>
+
+                    <div className="seq__info">
+                        <Subtitle> PONTOS {placarEtapa}</Subtitle>
+                        <Subtitle>
+                            <span className={`seq__tempo ${tempoCritico ? "seq__tempo--critico" : tempoAtencao ? "seq__tempo--atencao" : ""}`}>  TEMPO {minutosFormatados}:{segundosFormatados}
+                            </span>
+                        </Subtitle>
+                        
+                        <Text cor="parabens">ETAPA {etapa}</Text>
+                    
+                        {estadoEtapa === "jogando" && (
+                            <Button type="button" cor="green"
+                            onClick={verificarJogo}>VERIFICAR JOGO</Button>
+                        )}
+                        {estadoEtapa === "encerrada" && (
+                            <Button type="button" cor="pink" onClick={proximaEtapa}>
+                                {etapa === 3 ? "VER RESULTADO" : "PRÓXIMA ETAPA"}
+                            </Button>
+                        )}
+                        <Button type="button" onClick={() => navigate("/")}>SAIR</Button>
+                    </div>
+                </>
+      </main>
+ )}
+
+                       {estadoSequencia === "encerrada" &&(
+           <div className="seq__inicio"> 
+                        
+                        <div className="inicio__info">
+                            <Subtitle>SEQUÊNCIA COMPLETA!</Subtitle>
+                            <Text cor="parabens">PONTUAÇÃO TOTAL {pontosTotal}</Text>
+                            {pontosEtapa.map((pontos, index) => (<Text key={index}>
+                                Etapa {index + 1}: {pontos} pontos
+                                </Text>))}
+                        </div>
+
+                        <div className="inicio__buttons">
+                        <Button type="button" onClick={() => navigate("/")}>SAIR</Button>
+                        </div>  
+
+                    </div>)}
+</div>
+ );}

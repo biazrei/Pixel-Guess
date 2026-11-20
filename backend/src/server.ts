@@ -3,11 +3,12 @@ import db from "./database/database.js";
 import { cadastroImgDia } from "./seeds/imgdia.js";
 import { cadastroImgSequencia } from "./seeds/sequencia.js";
 import { cadastroSequenciaDiaria } from "./seeds/sequencia.js";
-import path from "node:path";
+import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
 import { buscarImagem } from "./services/imgDiafuncionamento.js";
-import router from "./routes/imgdiaroutes.js";
+import imgdiarouter from "./routes/imgdiaroutes.js";
+import seqrouter from "./routes/seqroutes.js"
 import { buscarImgSeq } from "./services/seqfuncionamento.js";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
@@ -15,7 +16,9 @@ import { configurarEventos } from "./multiplayer/eventos.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const caminhoImagens = path.join(__dirname, "../imagens/imgdia");
+
+const caminhoImagensDia = path.join(__dirname, "../imagens/imgdia");
+const caminhoImgsSeq = path.join(__dirname, "../imagens/imgseq");
 const caminhoImagensMultiplayer = path.join(__dirname, "../imagens/imgmultiplayer");
 
 const PORT = 3000;
@@ -33,25 +36,18 @@ configurarEventos(io);
 app.use(cors());
 app.use(express.json());
 
-app.use(router);
+app.use(imgdiarouter);
+app.use(seqrouter);
 
 cadastroImgDia();
 cadastroImgSequencia();
 cadastroSequenciaDiaria();
 
-
-app.use("/imagens/imgdia", express.static(caminhoImagens));
+app.use("/imagens/imgdia", express.static(caminhoImagensDia));
+app.use("/imagens/imgseq", express.static(caminhoImgsSeq))
 app.use("/imagens/imgmultiplayer", express.static(caminhoImagensMultiplayer));
 
-app.get("/imagens", (req, res) => {
-  const resultado = db
-    .prepare("SELECT id, caminho FROM imagem_do_dia ORDER BY id ASC")
-    .all();
-
-  res.json(resultado);
-});
-
-//teste
+//testes
 app.get("/imgsequencia", (req, res) => {
   const sequencia = db
     .prepare("SELECT id, nome, caminho FROM imagens_sequencia ORDER BY id ASC")
@@ -67,27 +63,15 @@ app.get ("/imgseqdiaria" , (req, res) => {
   res.json(seqdiaria);
 });
 
-app.get ("/sequencia-do-dia", (req, res) => {
-  const seqdia = buscarImgSeq();
-  
-  console.log(seqdia);
-  res.json(seqdia);
-})
+app.get("/imagens", (req, res) => {
+  const resultado = db
+    .prepare("SELECT id, caminho FROM imagem_do_dia ORDER BY id ASC")
+    .all();
 
-
-
-
-app.get("/imagem-do-dia", (req, res) => {
-  const imagem = buscarImagem();
-  if (!imagem) {
-    return res.status(404).json({ mensagem: "Nenhuma imagem encontrada" });
-  }
-
-  return res.json({
-    id: imagem.id,
-    caminho: imagem.caminho,
-  });
+  res.json(resultado);
 });
+//fim teste
+
 
 httpServer.listen(PORT, () => {
   console.log(`Servidor funcionando na porta ${PORT}`);
