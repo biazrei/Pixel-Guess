@@ -16,14 +16,12 @@ body {
     align-items: center;
     min-height: 100vh;
     width: 100%;
+    position: relative;
+    isolation: isolate;
+        overflow: hidden;
+
 }
 
-.link{
-  text-decoration: none;
-  color: var(--white);
-  transition: 0.5s;
-}
-.link:hover{
-  color: var(--cyan);
-}
+
+
 

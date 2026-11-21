@@ -18,9 +18,9 @@ export default function Home() {
     <Text> Adivinhe a imagem oculta </Text>
      </div>
     <div className="home__buttons">
-    <Button cor="pink" onClick={() => navigate("/ImagemDoDia")}>IMAGEM DO DIA </Button>
-    <Button cor="green" onClick={() => navigate("/sequencia")}>SEQUÊNCIA</Button>
-    <Button cor="purple" onClick={() => navigate("/escolha-modo")}>MULTIPLAYER</Button>
+    <Button background="pink" onClick={() => navigate("/ImagemDoDia")}>IMAGEM DO DIA </Button>
+    <Button background="green" onClick={() => navigate("/sequencia")}>SEQUÊNCIA</Button>
+    <Button background="purple" onClick={() => navigate("/escolha-modo")}>MULTIPLAYER</Button>
     </div>
     </main>
  )
