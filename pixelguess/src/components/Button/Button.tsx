@@ -17,7 +17,6 @@ export default function Button (props: ButtonProps){
     type={props.type ?? "button" }
      className={`button ${props.cor ? `button--${props.cor}` : ""} ${props.background ? `button--background-${props.background}` : ""}`}
     onClick={props.onClick}>
-        
         {props.children}  
      </button>)
 }

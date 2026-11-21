@@ -101,8 +101,8 @@ useEffect(()=> {
                         </div>
 
                         <div className="inicio__buttons">
-                          <Button type="button" cor="cyan" onClick={() => setEstadoSequencia("jogando")}>INICIAR</Button>
-                        <Button type="button" onClick={() => navigate("/")}>SAIR</Button>
+                          <Button type="button" cor="green" onClick={() => setEstadoSequencia("jogando")}>INICIAR</Button>
+                        <Button type="button" onClick={() => navigate("/")}>VOLTAR</Button>
                         </div>  
 
                     </div>)}
@@ -138,7 +138,7 @@ useEffect(()=> {
                             onClick={verificarJogo}>VERIFICAR JOGO</Button>
                         )}
                         {estadoEtapa === "encerrada" && (
-                            <Button type="button" cor="pink" onClick={proximaEtapa}>
+                            <Button type="button" cor="green" onClick={proximaEtapa}>
                                 {etapa === 3 ? "VER RESULTADO" : "PRÓXIMA ETAPA"}
                             </Button>
                         )}
@@ -153,8 +153,8 @@ useEffect(()=> {
                         
                         <div className="inicio__info">
                             <Subtitle>SEQUÊNCIA COMPLETA!</Subtitle>
-                            <Text cor="parabens">PONTUAÇÃO TOTAL {pontosTotal}</Text>
-                            {pontosEtapa.map((pontos, index) => (<Text key={index}>
+                            <Text cor="certo">PONTUAÇÃO TOTAL {pontosTotal}</Text>
+                            {pontosEtapa.map((pontos, index) => (<Text key={index} >
                                 Etapa {index + 1}: {pontos} pontos
                                 </Text>))}
                         </div>
