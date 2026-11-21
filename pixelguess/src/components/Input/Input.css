@@ -10,9 +10,20 @@
 }
 
 .input:focus {
-    border-color: cyan;
+    border-color: var(--cyan);
     outline: none;
 }
+.input--pink{
+     border: 2px solid var(--pink);
+
+}
+
+.input--pink:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 20px var(--pink);
+}
+
+
 
 .input--correta:disabled{
     border-color: var(--green);
@@ -25,7 +36,7 @@
 }
 
 .input--errada:focus{
-    border-color: var(--pink);
+    border-color: var(--red);
     animation: tremida 0.3s ease-in-out;
 }
 

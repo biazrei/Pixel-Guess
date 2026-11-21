@@ -114,6 +114,7 @@ export default function ImagemDoDia() {
               aoDigitar={setResposta}
               estado={resultado}
               disabled={false}
+              cor="pink"
             />
             <Button type="submit" cor="green">ENVIAR</Button>
           </>

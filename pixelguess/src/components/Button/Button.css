@@ -114,9 +114,9 @@
 }
 
 .button--background-pink:hover {
-    box-shadow: 0 0 20px var(--cyan);
+    box-shadow: 0 0 20px var(--white);
     color: var(--pink);
-    border: 2px solid var(--cyan);
+    border: 2px solid var(--pink);
 }
 
 .button--background-green{
@@ -129,9 +129,9 @@
 }
 
 .button--background-green:hover {
-    box-shadow: 0 0 20px var(--cyan);
+    box-shadow: 0 0 20px var(--white);
     color: var(--green);
-    border: 2px solid var(--cyan);
+    border: 2px solid var(--green);
 }
  
 .button--background-purple{
@@ -144,13 +144,28 @@
 }
 
 .button--background-purple:hover {
-    box-shadow: 0 0 20px var(--cyan);
+    box-shadow: 0 0 20px var(--white);
     color: var(--purple);
-    border: 2px solid var(--cyan);
+    border: 2px solid var(--purple);
 }
  
+@media (max-width: 600px) {
+  .button {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .button:hover {
+    color: var(--background);
+}
+  .button--background-pink:hover{
+    box-shadow: 0 0 20px var(--pink);
+  }
+  .button--background-green:hover{
+    box-shadow: 0 0 20px var(--green);
+  }
+  .button--background-purple:hover{
+    box-shadow: 0 0 20px var(--purple);
+  }
 
-
-
-
-
+}

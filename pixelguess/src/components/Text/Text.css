@@ -5,9 +5,13 @@ p {
     
 }
 .text--aviso {
-  color: #e00404;
+  color: var(--red);
 }
 
 .text--parabens{
     color: var(--cyan);
+}
+
+.text--certo{
+    color: var(--green);
 }

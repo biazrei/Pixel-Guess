@@ -18,10 +18,6 @@ body {
     width: 100%;
     position: relative;
     isolation: isolate;
-        overflow: hidden;
+    overflow: hidden;
 
 }
-
-
-
-
