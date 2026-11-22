@@ -12,6 +12,7 @@ type SalaAtiva = {
     jogadores: string[];
     prontos: string[];
     finalizados: string[];
+    pontuacoesFinais: Record<string, number>;
     rodadaAtual: number;
     imagens: ReturnType<typeof buscarImagensMultiplayer>;
     prontosProximaRodada: string[];
@@ -60,6 +61,7 @@ function reservarSala(tipo: TipoSala) {
     jogadores: [],
     prontos: [],
     finalizados: [],
+    pontuacoesFinais: {},
     rodadaAtual: 0,
     imagens: [],
     prontosProximaRodada: [],
@@ -126,6 +128,12 @@ export function configurarSalas(io: Server) {
     io.on("connection", (socket) => {
 
         socket.on("entrar-aleatorio", () => {
+            const salaAtualId = socket.data.salaId as number | undefined;
+
+            if (salaAtualId !== undefined && salasAtivas.has(salaAtualId)) {
+        return;
+    }
+
             const salaAguardando = Array.from(salasAtivas.values()).find(
                 (sala) =>
                     sala.tipo === "publica" &&
@@ -257,23 +265,47 @@ export function configurarSalas(io: Server) {
             }
 });
 
-        socket.on("jogador-finalizou", () => {
-           const salaId = socket.data.salaId as number | undefined;
+        socket.on("jogador-finalizou", (pontuacaoFinal: number) => {
+    const salaId = socket.data.salaId as number | undefined;
 
-           if (salaId === undefined) return;
+    if (salaId === undefined) return;
 
-           const sala = salasAtivas.get(salaId);
+    const sala = salasAtivas.get(salaId);
 
-           if (!sala || !sala.jogadores.includes(socket.id)) return;
+    if (!sala || !sala.jogadores.includes(socket.id)) return;
 
-           if (!sala.finalizados.includes(socket.id)) {
+    if (
+        typeof pontuacaoFinal !== "number" ||
+        !Number.isFinite(pontuacaoFinal) ||
+        pontuacaoFinal < 0
+    ) {
+        return;
+    }
+
+    sala.pontuacoesFinais[socket.id] = pontuacaoFinal;
+
+    if (!sala.finalizados.includes(socket.id)) {
         sala.finalizados.push(socket.id);
-            }
+    }
 
-           if (sala.finalizados.length === 2) {
-        io.to(`sala-${salaId}`).emit("partida-encerrada");
+    if (sala.finalizados.length === 2) {
+        sala.jogadores.forEach((jogadorId) => {
+            const oponenteId = sala.jogadores.find(
+                (id) => id !== jogadorId
+            );
+
+            const jogador = io.sockets.sockets.get(jogadorId);
+
+            jogador?.emit("resultado-final", {
+                meusPontos: sala.pontuacoesFinais[jogadorId] ?? 0,
+                pontosOponente: oponenteId
+                    ? sala.pontuacoesFinais[oponenteId] ?? 0
+                    : 0,
+            });
+        });
+
         liberarSala(salaId);
-            }
+    }
 });
 
         socket.on("disconnect", () => {

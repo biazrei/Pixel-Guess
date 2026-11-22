@@ -7,6 +7,7 @@ type ButtonProps ={
     background?: string;
     onClick?: () => void;
     type?:"button"|"submit"
+    disabled?: boolean;
 };
 
 export default function Button (props: ButtonProps){
