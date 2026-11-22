@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 
 interface Particle {
@@ -16,6 +15,7 @@ interface Particle {
 
 interface PixelConfettiProps {
   active: boolean;
+  type: "vitoria" | "derrota";
 }
 
 const COLORS = [
@@ -27,7 +27,7 @@ const COLORS = [
   "#FFF1E8",
 ];
 
-export function PixelConfetti({ active }: PixelConfettiProps) {
+export function PixelConfetti({ active, type }: PixelConfettiProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -47,13 +47,16 @@ export function PixelConfetti({ active }: PixelConfettiProps) {
 
     ctx.scale(ratio, ratio);
 
+    let animationId = 0;
+    let frame = 0;
+
     const particles: Particle[] = [];
 
+    // EFEITO DE VITÓRIA
     function criarExplosao() {
       const centroX = width / 2;
       const centroY = height / 2;
 
-      // Confetes coloridos
       for (let i = 0; i < 100; i++) {
         const angle = Math.random() * Math.PI * 2;
         const velocity = Math.random() * 9 + 7;
@@ -72,7 +75,6 @@ export function PixelConfetti({ active }: PixelConfettiProps) {
         });
       }
 
-      // Emoji de comemoração
       for (let i = 0; i < 12; i++) {
         const angle = Math.random() * Math.PI * 2;
         const velocity = Math.random() * 8 + 8;
@@ -92,27 +94,82 @@ export function PixelConfetti({ active }: PixelConfettiProps) {
       }
     }
 
-    let explosoesPendentes = 3;
+    // EFEITO DE DERROTA
+    function desenharRaios() {
+      const cores = ["#29ADFF", "#A78BFA", "#FFEC27"];
 
-    const timers = [0, 100, 200].map((delay) =>
-      window.setTimeout(() => {
-        criarExplosao();
-        explosoesPendentes--;
-      }, delay)
-    );
+      ctx!.save();
 
-    let animationId = 0;
+      for (let i = 0; i < 12; i++) {
+        const ladoEsquerdo = i % 2 === 0;
+
+        let x = ladoEsquerdo ? 8 : width - 8;
+        let y = Math.random() * height;
+
+        ctx!.beginPath();
+        ctx!.moveTo(x, y);
+
+        for (let parte = 0; parte < 6; parte++) {
+          x += ladoEsquerdo
+            ? Math.random() * 18
+            : -Math.random() * 18;
+
+          y += Math.random() * 35 - 17;
+
+          ctx!.lineTo(x, y);
+        }
+
+        ctx!.strokeStyle = cores[i % cores.length];
+        ctx!.lineWidth = 2 + Math.random() * 2;
+        ctx!.shadowColor = ctx!.strokeStyle;
+        ctx!.shadowBlur = 15;
+        ctx!.stroke();
+      }
+
+      ctx!.restore();
+    }
+
+    let explosoesPendentes = type === "vitoria" ? 3 : 0;
+
+    const timers =
+      type === "vitoria"
+        ? [0, 100, 200].map((delay) =>
+            window.setTimeout(() => {
+              criarExplosao();
+              explosoesPendentes--;
+            }, delay)
+          )
+        : [];
 
     function render() {
       ctx!.clearRect(0, 0, width, height);
 
+      if (type === "derrota") {
+        // Flash elétrico
+        if (frame % 12 < 4) {
+          ctx!.fillStyle = "rgba(41, 173, 255, 0.10)";
+          ctx!.fillRect(0, 0, width, height);
+          desenharRaios();
+        }
+
+        frame++;
+
+        if (frame < 65) {
+          animationId = requestAnimationFrame(render);
+        } else {
+          ctx!.clearRect(0, 0, width, height);
+        }
+
+        return;
+      }
+
+      // Partículas da vitória
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
 
         p.x += p.vx;
         p.y += p.vy;
 
-        // Movimento e gravidade
         p.vy += 0.045;
         p.vx *= 0.985;
         p.vy *= 0.985;
@@ -161,7 +218,7 @@ export function PixelConfetti({ active }: PixelConfettiProps) {
       timers.forEach(clearTimeout);
       cancelAnimationFrame(animationId);
     };
-  }, [active]);
+  }, [active, type]);
 
   if (!active) return null;
 
