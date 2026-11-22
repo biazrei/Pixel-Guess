@@ -12,6 +12,10 @@ import imgdiarouter from "./routes/imgdiaroutes.js";
 import seqrouter from "./routes/seqroutes.js"
 import { buscarImgSeq } from "./services/seqfuncionamento.js";
 import multiplayerrouter from "./routes/multiplayerroutes.js";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
+import "./seeds/salasMultiplayerSeed.js";
+import { configurarSalas } from "./services/salasMultiplayer.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,6 +25,21 @@ const caminhoImgsMultiplayer = path.join(__dirname, "../imagens/imgmultiplayer")
 
 const PORT = 3000;
 const app = express();
+
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+    console.log("Jogador conectado:", socket.id);
+});
+
+configurarSalas(io);
 
 app.use(cors());
 app.use(express.json());
@@ -64,6 +83,6 @@ app.get("/imagens", (req, res) => {
 //fim teste
 
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Servidor funcionando na porta ${PORT}`);
 });

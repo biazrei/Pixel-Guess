@@ -67,5 +67,16 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_imagens_multiplayer
 ON imagens_multiplayer (nome);
 `);
 
+db.exec(`
+CREATE TABLE IF NOT EXISTS salas_multiplayer (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    codigo TEXT NOT NULL UNIQUE,
+    tipo TEXT NOT NULL CHECK (tipo IN ('publica', 'privada')),
+    status TEXT NOT NULL DEFAULT 'disponivel'
+        CHECK (status IN ('disponivel', 'aguardando', 'em_andamento')),
+    criada_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
 
 export default db;

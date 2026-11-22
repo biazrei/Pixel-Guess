@@ -4,22 +4,28 @@ import { useEffect, useState, useCallback } from "react";
 import { StepBack } from "lucide-react";
 import Text from "../../components/Text/Text";
 import Puzzle from "../../components/Puzzle/Puzzle";
-import {buscarImagensMultiplayer, type ImagemMultiplayer} from "./Service/MultiplayerService";
+import type { ImagemMultiplayer } from "./Service/MultiplayerService";
+import socket from "../../services/socket";
 
 type RoundResult = "completed" | "active" | "pending";
 
 export default function Multiplayer() {
     const navigate = useNavigate();
+    const [partidaIniciada, setPartidaIniciada] = useState(false);
+    const [jogadoresProntos, setJogadoresProntos] = useState(0);
+    const [jaEstouPronto, setJaEstouPronto] = useState(false);
+    const [oponenteDesconectou, setOponenteDesconectou] = useState(false);
     const [tempo, setTempo] = useState(40);
     const [imagemAtual, setImagemAtual] = useState<ImagemMultiplayer | null>(null);
-    const [erro, setErro] = useState("");
+    const erro = "";
     const [pontos, setPontos] = useState(0);
     const [rodadaFinalizada, setRodadaFinalizada] = useState(false);
-    const [imagensDisponiveis, setImagensDisponiveis] = useState<ImagemMultiplayer[]>([]);
     const [rodadaAtual, setRodadaAtual] = useState(1);
     const [pontuacoesRodadas, setPontuacoesRodadas] = useState<number[]>([]);
-    const atualizarPontos = useCallback((novosPontos: number) => {
-    setPontos(novosPontos);
+    const [partidaEncerrada, setPartidaEncerrada] = useState(false);
+    const [aguardandoOponente, setAguardandoOponente] = useState(false);
+    const atualizarPontos = useCallback((novosPontos: number) => {setPontos(novosPontos);
+    
 }, []);
 
     const rounds: RoundResult[] = Array.from(
@@ -39,54 +45,66 @@ export default function Multiplayer() {
     function avancarRodada() {
     if (rodadaAtual >= 5) return;
 
-    const proximaImagem = imagensDisponiveis[rodadaAtual];
+    setAguardandoOponente(true);
+    socket.emit("jogador-proxima-rodada");
+}
 
-    if (!proximaImagem) {
-        setErro("Não há imagens disponíveis para a próxima rodada.");
-        return;
+    useEffect(() => {
+    function atualizarProntos(dados: { quantidade: number }) {
+        setJogadoresProntos(dados.quantidade);
     }
 
-    setRodadaAtual((atual) => atual + 1);
-    setImagemAtual(proximaImagem);
+    function iniciarPartida(dados: {
+    rodada: number;
+    imagem: ImagemMultiplayer;
+}) {
+    setRodadaAtual(dados.rodada);
+    setImagemAtual(dados.imagem);
+    setPontos(0);
+    setTempo(40);
+    setPartidaIniciada(true);
+}
+
+    function receberProximaRodada(dados: {
+    rodada: number;
+    imagem: ImagemMultiplayer;
+    
+}) {
+
+    setRodadaAtual(dados.rodada);
+    setImagemAtual(dados.imagem);
     setPontos(0);
     setTempo(40);
     setRodadaFinalizada(false);
+    setAguardandoOponente(false);
 }
 
-    useEffect(() => {
-        let ativo = true;
-
-        async function carregarImagem() {
-    try {
-        const imagens = await buscarImagensMultiplayer();
-
-        if (imagens.length === 0) {
-            throw new Error("Nenhuma imagem encontrada.");
-        }
-
-        if (ativo) {
-            const imagensEmbaralhadas = [...imagens].sort(
-                () => Math.random() - 0.5
-            );
-
-            setImagensDisponiveis(imagensEmbaralhadas);
-            setImagemAtual(imagensEmbaralhadas[0]);
-        }
-    } catch {
-        if (ativo) {
-            setErro("Não foi possível carregar as imagens.");
-        }
+    function jogadorDesconectou() {
+    setOponenteDesconectou(true);
     }
-}
 
-        carregarImagem();
+    function encerrarPartida() {
+    setPartidaEncerrada(true);
+    }
 
-        return () => {
-            ativo = false;
-        };
-    }, []);
+    socket.on("atualizar-prontos", atualizarProntos);
+    socket.on("partida-iniciada", iniciarPartida);
+    socket.on("proxima-rodada", receberProximaRodada);
+    socket.on("jogador-desconectou", jogadorDesconectou);
+    socket.on("partida-encerrada", encerrarPartida);
+
+    return () => {
+    socket.off("atualizar-prontos", atualizarProntos);
+    socket.off("partida-iniciada", iniciarPartida);
+    socket.off("proxima-rodada", receberProximaRodada);
+    socket.off("jogador-desconectou", jogadorDesconectou);
+    socket.off("partida-encerrada", encerrarPartida);
+    };
+}, []);
 
     useEffect(() => {
+    if (!partidaIniciada || rodadaFinalizada) return;
+
     if (tempo <= 0) {
         if (!rodadaFinalizada) {
             setPontuacoesRodadas((anteriores) => [
@@ -105,15 +123,54 @@ export default function Multiplayer() {
     }, 1000);
 
     return () => clearInterval(intervalo);
-}, [tempo, rodadaFinalizada, pontos]);
+}, [tempo, rodadaFinalizada, pontos, partidaIniciada]);
 
+    function confirmarPronto() {
+    if (jaEstouPronto) return;
+
+    setJaEstouPronto(true);
+    socket.emit("jogador-pronto");
+}
     return (
         <main className="multiplayer">
+
+    {oponenteDesconectou ? (
+        <div className="multiplayer__desconexao">
+            <Text>SEU OPONENTE DESCONECTOU!</Text>
+            <p>A partida foi encerrada.</p>
+
+            <button
+                type="button"
+                onClick={() => navigate("/escolha-modo")}
+            >
+                VOLTAR
+            </button>
+        </div>
+    ) : !partidaIniciada ? (
+        <div className="multiplayer__preparacao">
+            <Text>PREPARE-SE PARA JOGAR!</Text>
+
+            <p>O jogo terá 5 rodadas.</p>
+            <p>Cada rodada terá 40 segundos.</p>
+            <p>Descubra a imagem para ganhar pontos!</p>
+
+            <p>Jogadores prontos: {jogadoresProntos}/2</p>
+
+            <button
+                type="button"
+                onClick={confirmarPronto}
+                disabled={jaEstouPronto}
+            >
+                {jaEstouPronto ? "AGUARDANDO JOGADOR..." : "PRONTO"}
+            </button>
+        </div>
+    ) : (
+        <>
             <header className="multiplayer__header">
 
                 <button
                     className="multiplayer__back"
-                    onClick={() => navigate(-1)}
+                    onClick={() => {socket.emit("finalizar-partida"); navigate("/escolha-modo");}}
                     aria-label="Voltar para a Home"
                 >
                     <StepBack size={18} />
@@ -154,16 +211,38 @@ export default function Multiplayer() {
     <p>Sua pontuação: {pontos}</p>
 
     {rodadaAtual < 5 ? (
+    <>
         <button
             className="multiplayer__next"
             onClick={avancarRodada}
+            disabled={aguardandoOponente}
         >
             Próxima rodada
         </button>
-    ) : (
+
+        {aguardandoOponente && (
+            <p>
+                Aguardando o outro jogador confirmar...
+            </p>
+        )}
+    </>
+) : (
         <>
     <Text>VOCÊ CONCLUIU AS 5 RODADAS!</Text>
-    <p>Pontuação final: {pontuacaoTotal}</p>
+<p>Pontuação final: {pontuacaoTotal}</p>
+
+{partidaEncerrada ? (
+    <Text>PARTIDA ENCERRADA! OS DOIS JOGADORES CONCLUÍRAM!</Text>
+) : (
+    <p>Aguardando o outro jogador terminar...</p>
+)}
+
+<button
+    type="button"
+    onClick={() => socket.emit("jogador-finalizou")}
+>
+    FINALIZAR PARTIDA
+</button>
 </>
     )}
 </div>
@@ -178,6 +257,8 @@ export default function Multiplayer() {
         <p>Carregando quebra-cabeça...</p>
     )}
 </div>
+    </>
+)}
 
         </main>
     );
