@@ -7,6 +7,7 @@ import Text from "../../components/Text/Text";
 import JogoDia from "./jogo/JogoDia";
 import { useState, useEffect } from "react";
 import { buscarImagemDoDia, verificarResposta } from "./service/ImgDiaService";
+import { PixelConfetti } from "../../components/PixelConfetti/PixelConfetti";
 
 type EstadoJogo = "jogando" | "vitoria" | "derrota";
 
@@ -119,8 +120,16 @@ export default function ImagemDoDia() {
             <Button type="submit" cor="green">ENVIAR</Button>
           </>
         )}
+        
         <Button type="button" onClick={() => navigate("/")}>SAIR</Button>
       </form>
+
+      {(estadoJogo === "vitoria" || estadoJogo === "derrota") && (
+        <PixelConfetti
+          active={true}
+          type={estadoJogo}
+        />
+      )}
     </main>
   );
 }
