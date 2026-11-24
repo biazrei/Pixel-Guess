@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from "react";
 
 interface Particle {
@@ -46,6 +47,7 @@ export function PixelConfetti({ active, type }: PixelConfettiProps) {
     canvas.height = height * ratio;
 
     ctx.scale(ratio, ratio);
+    ctx.imageSmoothingEnabled = false;
 
     let animationId = 0;
     let frame = 0;
@@ -94,39 +96,107 @@ export function PixelConfetti({ active, type }: PixelConfettiProps) {
       }
     }
 
-    // EFEITO DE DERROTA
-    function desenharRaios() {
-      const cores = ["#29ADFF", "#A78BFA", "#FFEC27"];
+    // EFEITO GAME OVER PIXELIZADO
+    function desenharGameOver() {
+      const progresso = Math.min(frame / 18, 1);
+      const centroX = width / 2;
+      const centroY = height / 2;
+
+      // Fundo escuro
+      ctx!.fillStyle = `rgba(5, 5, 20, ${0.82 * progresso})`;
+      ctx!.fillRect(0, 0, width, height);
+
+      // Pequena entrada do texto
+      const escala = 0.85 + Math.min(frame / 15, 1) * 0.15;
 
       ctx!.save();
+      ctx!.translate(centroX, centroY);
+      ctx!.scale(escala, escala);
 
-      for (let i = 0; i < 12; i++) {
-        const ladoEsquerdo = i % 2 === 0;
+      const tamanhoFonte = Math.min(88, width * 0.15);
+      const texto = "GAME OVER";
 
-        let x = ladoEsquerdo ? 8 : width - 8;
-        let y = Math.random() * height;
+      ctx!.font = `bold ${tamanhoFonte}px monospace`;
+      ctx!.textAlign = "center";
+      ctx!.textBaseline = "middle";
 
-        ctx!.beginPath();
-        ctx!.moveTo(x, y);
-
-        for (let parte = 0; parte < 6; parte++) {
-          x += ladoEsquerdo
-            ? Math.random() * 18
-            : -Math.random() * 18;
-
-          y += Math.random() * 35 - 17;
-
-          ctx!.lineTo(x, y);
-        }
-
-        ctx!.strokeStyle = cores[i % cores.length];
-        ctx!.lineWidth = 2 + Math.random() * 2;
-        ctx!.shadowColor = ctx!.strokeStyle;
-        ctx!.shadowBlur = 15;
-        ctx!.stroke();
+      // Glitch ciano
+      if (frame % 8 < 4) {
+        ctx!.fillStyle = "#29ADFF";
+        ctx!.fillText(texto, -5, 0);
       }
 
+      // Glitch rosa
+      if (frame % 10 < 5) {
+        ctx!.fillStyle = "#FF004D";
+        ctx!.fillText(texto, 5, 0);
+      }
+
+      // Texto principal
+      ctx!.fillStyle = "#FFF1E8";
+      ctx!.shadowColor = "#FF004D";
+      ctx!.shadowBlur = 18;
+      ctx!.fillText(texto, 0, 0);
+
+      ctx!.shadowBlur = 0;
+
+      // Faixas de glitch atravessando o texto
+      if (frame % 7 < 3) {
+        const faixaY = Math.sin(frame * 2) * tamanhoFonte * 0.35;
+
+        ctx!.save();
+        ctx!.beginPath();
+        ctx!.rect(
+          -width,
+          faixaY,
+          width * 2,
+          tamanhoFonte * 0.12
+        );
+        ctx!.clip();
+
+        ctx!.fillStyle = "#29ADFF";
+        ctx!.fillText(texto, -12, 0);
+
+        ctx!.restore();
+      }
+
+      // Subtítulo
+      ctx!.font = `bold ${Math.max(12, tamanhoFonte * 0.2)}px monospace`;
+      ctx!.fillStyle = "#FFEC27";
+      ctx!.fillText("FIM DE JOGO", 0, tamanhoFonte * 0.95);
+
       ctx!.restore();
+
+      // Pequenos blocos pixelizados
+      for (let i = 0; i < 18; i++) {
+        if ((frame + i * 3) % 12 < 5) {
+          const lado = i % 2 === 0 ? -1 : 1;
+
+          const x =
+            centroX + lado * (width * 0.25 + Math.random() * width * 0.2);
+
+          const y =
+            centroY - tamanhoFonte + Math.random() * tamanhoFonte * 2;
+
+          const tamanho = 4 + Math.random() * 13;
+
+          ctx!.fillStyle =
+            i % 3 === 0
+              ? "#FF004D"
+              : i % 3 === 1
+              ? "#29ADFF"
+              : "#FFEC27";
+
+          ctx!.fillRect(x, y, tamanho, tamanho);
+        }
+      }
+
+      // Linhas horizontais discretas
+      ctx!.fillStyle = "rgba(255, 255, 255, 0.07)";
+
+      for (let y = 0; y < height; y += 5) {
+        ctx!.fillRect(0, y, width, 1);
+      }
     }
 
     let explosoesPendentes = type === "vitoria" ? 3 : 0;
@@ -145,16 +215,11 @@ export function PixelConfetti({ active, type }: PixelConfettiProps) {
       ctx!.clearRect(0, 0, width, height);
 
       if (type === "derrota") {
-        // Flash elétrico
-        if (frame % 12 < 4) {
-          ctx!.fillStyle = "rgba(41, 173, 255, 0.10)";
-          ctx!.fillRect(0, 0, width, height);
-          desenharRaios();
-        }
+        desenharGameOver();
 
         frame++;
 
-        if (frame < 65) {
+        if (frame < 120) {
           animationId = requestAnimationFrame(render);
         } else {
           ctx!.clearRect(0, 0, width, height);
