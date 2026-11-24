@@ -8,11 +8,13 @@ import JogoDia from "./jogo/JogoDia";
 import { useState, useEffect } from "react";
 import { buscarImagemDoDia, verificarResposta } from "./service/ImgDiaService";
 import { PixelConfetti } from "../../components/PixelConfetti/PixelConfetti";
+import { useMusicaFundo } from "../../components/MusicaFundo/MusicaFundo";
 
 type EstadoJogo = "jogando" | "vitoria" | "derrota";
 
 export default function ImagemDoDia() {
   const navigate = useNavigate();
+  const setGameOverMusica = useMusicaFundo();
   const [pontos, setPontos] = useState<number>(1500);
   const [resposta, setResposta] = useState("");
   const [resultado, setResultado] = useState<"correta" | "errada" | "">("");
@@ -20,6 +22,13 @@ export default function ImagemDoDia() {
   const [nomeResposta, setNomeResposta] = useState("");
   const [estadoJogo, setEstadoJogo] = useState<EstadoJogo>("jogando");
   const [imagemAtual, setImagemAtual] = useState<{ id: number; caminho: string } | null>(null);
+useEffect(() => {
+  setGameOverMusica(estadoJogo === "derrota");
+
+  return () => {
+    setGameOverMusica(false);
+  };
+}, [estadoJogo, setGameOverMusica]);
 
   useEffect(() => {
     buscarImagemDoDia()
