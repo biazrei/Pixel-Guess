@@ -74,18 +74,82 @@ Para executar o projeto, é preciso ter instalado:
 ```
 Pixel-Guess/
 ├── backend/
-│ ├── imagens/ # Imagens dos jogos (imgdia/ e imgseq/)
-│ └── src/
-│ ├── database/ # Conexão e tabelas do SQLite
-│ ├── routes/ # Rotas da API
-│ ├── services/ # Escolha da imagem do dia e da sequência
-│ ├── seeds/ # Cadastro das imagens no banco
-│ └── server.ts # Inicia o servidor (porta 3000)
-└── pixelguess/ # Frontend (React + Vite)
-    └── src/
-        ├── components/ # Button, Input, CardGrid, GameContainer, Puzzle...
-        ├── pages/ # Home, Imagem do dia, Sequencia, Multiplayer
-        └── styles/ # Cores e fontes
+│ ├── imagens/
+│ │ ├── imgdia/ # Imagens do modo Imagem do Dia
+│ │ └── imgseq/ # Imagens do modo Sequência
+│ ├── src/
+│ │ ├── data/
+│ │ │ └── pixelguess.db # Banco SQLite (criado automaticamente)
+│ │ ├── database/
+│ │ │ └── database.ts # Conexão e criação das tabelas
+│ │ ├── routes/
+│ │ │ ├── imgdiaroutes.ts # Rotas da Imagem do Dia
+│ │ │ └── seqroutes.ts # Rotas da Sequência
+│ │ ├── seeds/
+│ │ │ ├── imgdia.ts # Cadastro das imagens da Imagem do Dia
+│ │ │ └── sequencia.ts # Cadastro das imagens e sequências
+│ │ ├── services/
+│ │ │ ├── imgDiafuncionamento.ts # Escolha da imagem do dia
+│ │ │ └── seqfuncionamento.ts # Escolha da sequência do dia
+│ │ └── server.ts # Inicia o servidor (porta 3000)
+│ ├── package.json
+│ ├── package-lock.json
+│ └── tsconfig.json
+│
+├── pixelguess/ # Frontend (React + Vite)
+│ ├── public/
+│ │ ├── favicon.svg
+│ │ └── icons.svg
+│ ├── src/
+│ │ ├── assets/ # Imagens do frontend
+│ │ ├── components/ # Cada pasta tem um .tsx e um .css
+│ │ │ ├── Button/ # Botão
+│ │ │ ├── CardGrid/ # Grade de 16 cards
+│ │ │ ├── GameContainer/ # Imagem desfocada com os cards por cima
+│ │ │ ├── Input/ # Campo de resposta
+│ │ │ ├── Puzzle/ # Quebra-cabeça de 16 peças
+│ │ │ ├── Subtitle/ # Subtítulo
+│ │ │ ├── Text/ # Texto
+│ │ │ └── Title/ # Título
+│ │ ├── pages/
+│ │ │ ├── Home/ # Tela inicial (Home.tsx e Home.css)
+│ │ │ ├── Imagem do dia/
+│ │ │ │ ├── jogo/
+│ │ │ │ │ └── JogoDia.tsx # Lógica do jogo (cards e pontos)
+│ │ │ │ ├── service/
+│ │ │ │ │ └── ImgDiaService.ts # Chamadas à API
+│ │ │ │ ├── Imgdia.tsx # Tela do modo
+│ │ │ │ └── Imgdia.css
+│ │ │ ├── Sequencia/
+│ │ │ │ ├── Jogo/
+│ │ │ │ │ └── JogoSeq.tsx # Lógica do jogo (etapas e pontos)
+│ │ │ │ ├── Service/
+│ │ │ │ │ └── SeqService.ts # Chamadas à API
+│ │ │ │ ├── Sequencia.tsx # Tela do modo
+│ │ │ │ └── Sequencia.css
+│ │ │ └── Multiplayer/ # Cada tela tem um .tsx e um .css
+│ │ │ ├── Multiplayer.* # Tela principal
+│ │ │ ├── Modo.* # Escolha do modo
+│ │ │ ├── Criar-sala.* # Criar sala
+│ │ │ ├── EntrarSala.* # Entrar em sala
+│ │ │ ├── Modo-aleatorio.* # Partida aleatória
+│ │ │ └── Vencedor.* # Tela de vencedor
+│ │ ├── styles/
+│ │ │ ├── global.css # Estilos gerais
+│ │ │ └── variables.css # Cores e fontes
+│ │ ├── App.tsx # Rotas do frontend
+│ │ └── main.tsx # Ponto de entrada do React
+│ ├── index.html
+│ ├── eslint.config.js
+│ ├── vite.config.ts
+│ ├── package.json
+│ ├── package-lock.json
+│ ├── tsconfig.json
+│ ├── tsconfig.app.json
+│ └── tsconfig.node.json
+│
+├── .gitignore
+└── README.md
 ```
 
 ## Como Executar
