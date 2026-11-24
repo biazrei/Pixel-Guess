@@ -12,7 +12,7 @@
 ###  Modos de Jogo
 
 #### IMAGEM DO DIA: 
-- Uma imagem que troca diariamente, igual para todos os jogadores e que é coberta por 16 cards que o jogador revela até acertar, sendo o primeiro card grátis. Do segundo em diante **cada card custa 100 pontos** .
+- Uma imagem que troca diariamente, igual para todos os jogadores e que é coberta por 16 cards que o jogador revela até acertar, sendo o primeiro card grátis. Do segundo em diante **cada card custa 100 pontos**.
 - O jogador começa com **1500** pontos, e esse diminui a cada revelação extra. 
 
 #### SEQUÊNCIA: 
@@ -48,7 +48,6 @@
 - Express (API)
 - TypeScript (executado com `tsx`)
 - CORS (comunicação entre frontend e backend)
-- dotenv (variáveis de ambiente)
 
 ### Banco de dados
 - SQLite (biblioteca `better-sqlite3`)
