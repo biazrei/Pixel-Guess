@@ -9,22 +9,21 @@ import Modo from "./pages/Multiplayer/Modo"
 import CriarSala from "./pages/Multiplayer/Criar-sala"
 import EntrarSala from "./pages/Multiplayer/EntrarSala"
 import ModoAleatorio from "./pages/Multiplayer/Modo-aleatorio"
+import MusicaFundo from "./components/MusicaFundo/MusicaFundo";
 
-
-export default function App(){
+export default function App() {
   return (
-    <Routes>
-    <Route path="/" element={<Home/>}/>
-    <Route path="/multiplayer" element={<Multiplayer/>}/>
-    <Route path="/sequencia" element={<Sequencia/>}/>
-    <Route path="/ImagemDoDia" element={<ImagemDoDia/>}/>
-    <Route path="/escolha-modo" element={<Modo />} />
-    <Route path="/criar-sala" element={<CriarSala />} />
-    <Route path="/entrar-sala" element={<EntrarSala />} />
-    <Route path="/modo-aleatorio" element={<ModoAleatorio />} />
-    </Routes>
-    
-  
-
-  )
+    <MusicaFundo>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/multiplayer" element={<Multiplayer />} />
+        <Route path="/sequencia" element={<Sequencia />} />
+        <Route path="/ImagemDoDia" element={<ImagemDoDia />} />
+        <Route path="/escolha-modo" element={<Modo />} />
+        <Route path="/criar-sala" element={<CriarSala />} />
+        <Route path="/entrar-sala" element={<EntrarSala />} />
+        <Route path="/modo-aleatorio" element={<ModoAleatorio />} />
+      </Routes>
+    </MusicaFundo>
+  );
 }
