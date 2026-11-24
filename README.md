@@ -1,6 +1,6 @@
 #  Pixel Guess
 
-> Jogo Web e Mobile de adivinhação de imagens, onde o jogador descobre uma imagem secreta revelando-a aos poucos ou remontando um quebra-cabeça. Quanto menos ajuda for utilizada, mais pontos se ganha. 
+> Jogo Web Responsivo (Desktop e Mobile) de adivinhação de imagens, onde o jogador descobre uma imagem secreta revelando-a aos poucos ou remontando um quebra-cabeça. Quanto menos ajuda for utilizada, mais pontos se ganha. 
 
 ### Contexto acadêmico
 
