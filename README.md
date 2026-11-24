@@ -11,7 +11,7 @@
 
 ###  Modos de Jogo
 
-#### IMAGEM DO DIA*: 
+#### IMAGEM DO DIA: 
 - Uma imagem que troca diariamente, igual para todos os jogadores e que é coberta por 16 cards que o jogador revela até acertar, sendo o primeiro card grátis. Do segundo em diante **cada card custa 100 pontos** .
 - O jogador começa com **1500** pontos, e esse diminui a cada revelação extra. 
 
