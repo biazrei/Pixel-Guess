@@ -9,11 +9,14 @@ import Subtitle from "../../components/Subtitle/Subtitle";
 import Puzzle from "../../components/Puzzle/Puzzle";
 import type { ImagemMultiplayer } from "./Service/MultiplayerService";
 import socket from "../../services/socket";
+import { PixelConfetti } from "../../components/PixelConfetti/PixelConfetti";
+import { useMusicaFundo } from "../../components/MusicaFundo/MusicaFundo";
 
 type RoundResult = "completed" | "active" | "pending";
 
 export default function Multiplayer() {
     const navigate = useNavigate();
+    const setResultadoMusica = useMusicaFundo();
     const [partidaIniciada, setPartidaIniciada] = useState(false);
     const [jogadoresProntos, setJogadoresProntos] = useState(0);
     const [jaEstouPronto, setJaEstouPronto] = useState(false);
@@ -157,9 +160,31 @@ const tituloResultado = resultadoFinal
             ? "DERROTA!"
             : "EMPATE!"
     : "";
+const tipoResultado: "vitoria" | "derrota" | null =
+    resultadoFinal
+        ? resultadoFinal.meusPontos > resultadoFinal.pontosOponente
+            ? "vitoria"
+            : resultadoFinal.meusPontos < resultadoFinal.pontosOponente
+                ? "derrota"
+                : null
+        : null;
+        useEffect(() => {
+    if (tipoResultado) {
+        setResultadoMusica(tipoResultado);
+    }
 
+    return () => {
+        setResultadoMusica(null);
+    };
+}, [tipoResultado, setResultadoMusica]);
         return (
         <main className="multiplayer">
+             {tipoResultado && (
+            <PixelConfetti
+                active={true}
+                type={tipoResultado}
+            />
+        )}          
 
             {resultadoFinal ? (
     <div className="multiplayer__final">
