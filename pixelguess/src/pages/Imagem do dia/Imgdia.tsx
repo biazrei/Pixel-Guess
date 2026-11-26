@@ -22,11 +22,15 @@ export default function ImagemDoDia() {
   const [nomeResposta, setNomeResposta] = useState("");
   const [estadoJogo, setEstadoJogo] = useState<EstadoJogo>("jogando");
   const [imagemAtual, setImagemAtual] = useState<{ id: number; caminho: string } | null>(null);
+  
 useEffect(() => {
-  setGameOverMusica(estadoJogo === "derrota");
-
+if (estadoJogo === "vitoria" || estadoJogo === "derrota") {
+    setGameOverMusica(estadoJogo);
+  } else {
+    setGameOverMusica(null);
+  }
   return () => {
-    setGameOverMusica(false);
+    setGameOverMusica(null);
   };
 }, [estadoJogo, setGameOverMusica]);
 
