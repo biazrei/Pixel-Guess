@@ -1,4 +1,3 @@
-
 import {
   createContext,
   useContext,
@@ -8,7 +7,11 @@ import {
   type ReactNode,
 } from "react";
 
-const MusicaContext = createContext<(valor: boolean) => void>(() => {});
+type ResultadoMusica = "vitoria" | "derrota" | null;
+
+const MusicaContext = createContext<
+  (resultado: ResultadoMusica) => void
+>(() => {});
 
 export function useMusicaFundo() {
   return useContext(MusicaContext);
@@ -20,48 +23,56 @@ interface MusicaFundoProps {
 
 export default function MusicaFundo({ children }: MusicaFundoProps) {
   const fundoRef = useRef<HTMLAudioElement>(null);
-  const gameOverRef = useRef<HTMLAudioElement>(null);
+  const vitoriaRef = useRef<HTMLAudioElement>(null);
+  const derrotaRef = useRef<HTMLAudioElement>(null);
 
   const iniciouRef = useRef(false);
-  const gameOverAtualRef = useRef(false);
-
-  const [gameOver, setGameOver] = useState(false);
+  const [resultado, setResultado] = useState<ResultadoMusica>(null);
+  const resultadoAtualRef = useRef<ResultadoMusica>(null);
 
   useEffect(() => {
-    gameOverAtualRef.current = gameOver;
-
     const fundo = fundoRef.current;
-    const derrota = gameOverRef.current;
+    const vitoria = vitoriaRef.current;
+    const derrota = derrotaRef.current;
 
-    if (!fundo || !derrota || !iniciouRef.current) return;
+    resultadoAtualRef.current = resultado;
 
-    if (gameOver) {
-      fundo.pause();
-      derrota.currentTime = 0;
+    if (!fundo || !vitoria || !derrota) return;
+
+    if (!iniciouRef.current) return;
+
+    fundo.pause();
+    vitoria.pause();
+    derrota.pause();
+
+    vitoria.currentTime = 0;
+    derrota.currentTime = 0;
+
+    if (resultado === "vitoria") {
+      vitoria.play().catch(console.error);
+    } else if (resultado === "derrota") {
       derrota.play().catch(console.error);
     } else {
-      derrota.pause();
-      derrota.currentTime = 0;
       fundo.play().catch(console.error);
     }
-  }, [gameOver]);
+  }, [resultado]);
 
   useEffect(() => {
     const fundo = fundoRef.current;
-    const derrota = gameOverRef.current;
+    const vitoria = vitoriaRef.current;
+    const derrota = derrotaRef.current;
 
-    if (!fundo || !derrota) return;
+    if (!fundo || !vitoria || !derrota) return;
 
     fundo.volume = 0.06;
+    vitoria.volume = 0.10;
     derrota.volume = 0.10;
 
     function iniciarMusica() {
       iniciouRef.current = true;
 
-      if (gameOverAtualRef.current) {
-        derrota?.play().catch(console.error);
-      } else {
-        fundo?.play().catch(console.error);
+      if (resultadoAtualRef.current === null) {
+        fundo!.play().catch(console.error);
       }
 
       document.removeEventListener("click", iniciarMusica);
@@ -78,7 +89,7 @@ export default function MusicaFundo({ children }: MusicaFundoProps) {
   }, []);
 
   return (
-    <MusicaContext.Provider value={setGameOver}>
+    <MusicaContext.Provider value={setResultado}>
       <audio
         ref={fundoRef}
         src="/musica.mp3"
@@ -87,9 +98,17 @@ export default function MusicaFundo({ children }: MusicaFundoProps) {
       />
 
       <audio
-        ref={gameOverRef}
-        src="/gameover.mp3"
+        ref={vitoriaRef}
+        src="/vitoria.mp3"
         preload="auto"
+        onEnded={() => setResultado(null)}
+      />
+
+      <audio
+        ref={derrotaRef}
+        src="/derrota.mp3"
+        preload="auto"
+        onEnded={() => setResultado(null)}
       />
 
       {children}
