@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react"
 import JogoSequencia, { type JogoSeqRef } from "./Jogo/JogoSeq"
 import Subtitle from "../../components/Subtitle/Subtitle"
 import Text from "../../components/Text/Text"
+import Timer from "../../components/Timer/Timer"
 
 export default function Sequencia() {
     const navigate = useNavigate();
@@ -80,13 +81,6 @@ useEffect(()=> {
    
     }
 
-    const minutos = Math.floor(tempo / 60);
-    const segundos = tempo % 60;
-    const minutosFormatados = String(minutos).padStart(2, "0");
-    const segundosFormatados = String(segundos).padStart(2, "0");
-    const tempoCritico = tempo <= 10;
-    const tempoAtencao = tempo <= 30 && tempo > 10;
-
     return (
         <div>
             {estadoSequencia === "inicio" &&(
@@ -127,8 +121,7 @@ useEffect(()=> {
                     <div className="seq__info">
                         <Subtitle> PONTOS {placarEtapa}</Subtitle>
                         <Subtitle>
-                            <span className={`seq__tempo ${tempoCritico ? "seq__tempo--critico" : tempoAtencao ? "seq__tempo--atencao" : ""}`}>  TEMPO {minutosFormatados}:{segundosFormatados}
-                            </span>
+                           <Timer tempo={tempo}/>
                         </Subtitle>
                         
                         <Text cor="parabens">ETAPA {etapa}</Text>
