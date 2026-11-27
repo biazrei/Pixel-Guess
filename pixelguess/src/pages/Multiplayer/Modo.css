@@ -87,31 +87,11 @@
         gap: 2rem;
         padding: 2rem;}
 
-    .modo__text {
-        width: 100%;
-        text-align: center;}
-
-    .modo__buttons {
-        width: 100%;
-        max-width: 320px;
-        margin: 0 auto;}
 
     .modo-sala {
-        width: 90%;
-        max-width: 400px;
-        height: 650px;
-        padding: 1.5rem;
+        width: 90vw;
+        height: 90vh;
+        padding: 2rem;
         box-sizing: border-box;}
-
-    .modo-sala__content {
-        width: 100%;
-        max-width: 320px;}
-
-    .modo-sala__codigo {
-        width: 100%;
-        max-width: 250px;}
-
-    .modo-sala__buttons {
-        width: 100%;
-    }
+   
 }

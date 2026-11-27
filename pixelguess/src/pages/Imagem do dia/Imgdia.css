@@ -34,9 +34,8 @@
 
 @media (max-width: 600px) {
   .imgdia {
-    width: 90%;
-    max-width: 400px;
-    height: 650px;
+   width: 90vw;
+    height: 90vh;
     grid-template-columns: 1fr;
     gap: 2rem;
     padding: 2rem;
