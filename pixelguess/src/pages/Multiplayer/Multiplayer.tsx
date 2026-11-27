@@ -1,360 +1,181 @@
 import "./Multiplayer.css";
-import { useNavigate } from "react-router";
-import { useEffect, useState, useCallback } from "react";
-import { StepBack } from "lucide-react";
+import Subtitle from "../../components/Subtitle/Subtitle";
 import Text from "../../components/Text/Text";
 import Button from "../../components/Button/Button";
-import Title from "../../components/Title/Title";
-import Subtitle from "../../components/Subtitle/Subtitle";
 import Puzzle from "../../components/Puzzle/Puzzle";
-import type { ImagemMultiplayer } from "./Service/MultiplayerService";
-import socket from "../../services/socket";
+import Timer from "../../components/Timer/Timer";
 import { PixelConfetti } from "../../components/PixelConfetti/PixelConfetti";
-import { useMusicaFundo } from "../../components/MusicaFundo/MusicaFundo";
-
-type RoundResult = "completed" | "active" | "pending";
+import { useMultiplayerPartida } from "./useMultiplayerPartida";
 
 export default function Multiplayer() {
-    const navigate = useNavigate();
-    const setResultadoMusica = useMusicaFundo();
-    const [partidaIniciada, setPartidaIniciada] = useState(false);
-    const [jogadoresProntos, setJogadoresProntos] = useState(0);
-    const [jaEstouPronto, setJaEstouPronto] = useState(false);
-    const [oponenteDesconectou, setOponenteDesconectou] = useState(false);
-    const [tempo, setTempo] = useState(40);
-    const [imagemAtual, setImagemAtual] = useState<ImagemMultiplayer | null>(null);
-    const erro = "";
-    const [pontos, setPontos] = useState(0);
-    const [rodadaFinalizada, setRodadaFinalizada] = useState(false);
-    const [rodadaAtual, setRodadaAtual] = useState(1);
-    const [pontuacoesRodadas, setPontuacoesRodadas] = useState<number[]>([]);
-    const [partidaEncerrada, setPartidaEncerrada] = useState(false);
-    const [aguardandoOponente, setAguardandoOponente] = useState(false);
-    const [resultadoFinal, setResultadoFinal] = useState<{
-    meusPontos: number;
-    pontosOponente: number;
-} | null>(null);
+    const {
+        partidaIniciada,
+        jogadoresProntos,
+        jaEstouPronto,
+        oponenteDesconectou,
+        tempo,
+        imagemAtual,
+        erro,
+        pontos,
+        rodadaFinalizada,
+        rodadaAtual,
+        partidaEncerrada,
+        aguardandoOponente,
+        resultadoFinal,
+        enviouPontuacao,
+        rounds,
+        pontuacaoTotal,
+        tituloResultado,
+        tipoResultado,
+        atualizarPontos,
+        confirmarPronto,
+        avancarRodada,
+        finalizarPartidaAoSair,
+        enviarPontuacaoFinal,
+        voltarAoMenu,
+    } = useMultiplayerPartida();
 
-    const [enviouPontuacao, setEnviouPontuacao] = useState(false);
-    const atualizarPontos = useCallback((novosPontos: number) => {setPontos(novosPontos);
-    
-}, []);
-
-    const rounds: RoundResult[] = Array.from(
-    { length: 5 },
-    (_, index) => {
-        if (index < pontuacoesRodadas.length) return "completed";
-        if (index === rodadaAtual - 1) return "active";
-        return "pending";
-    }
-);
-
-    const pontuacaoTotal = pontuacoesRodadas.reduce(
-    (total, pontosRodada) => total + pontosRodada,
-    0
-);
-
-    function avancarRodada() {
-    if (rodadaAtual >= 5) return;
-
-    setAguardandoOponente(true);
-    socket.emit("jogador-proxima-rodada");
-}
-
-    useEffect(() => {
-    function atualizarProntos(dados: { quantidade: number }) {
-        setJogadoresProntos(dados.quantidade);
-    }
-
-    function iniciarPartida(dados: {
-    rodada: number;
-    imagem: ImagemMultiplayer;
-}) {
-    setRodadaAtual(dados.rodada);
-    setImagemAtual(dados.imagem);
-    setPontos(0);
-    setTempo(40);
-    setPartidaIniciada(true);
-}
-
-    function receberProximaRodada(dados: {
-    rodada: number;
-    imagem: ImagemMultiplayer;
-    
-}) {
-
-    setRodadaAtual(dados.rodada);
-    setImagemAtual(dados.imagem);
-    setPontos(0);
-    setTempo(40);
-    setRodadaFinalizada(false);
-    setAguardandoOponente(false);
-}
-
-    function jogadorDesconectou() {
-    setOponenteDesconectou(true);
-    }
-
-    function encerrarPartida() {
-    setPartidaEncerrada(true);
-    }
-
-    function receberResultadoFinal(dados: {
-    meusPontos: number;
-    pontosOponente: number;
-}) {
-    setResultadoFinal(dados);
-}
-
-    socket.on("atualizar-prontos", atualizarProntos);
-    socket.on("partida-iniciada", iniciarPartida);
-    socket.on("proxima-rodada", receberProximaRodada);
-    socket.on("jogador-desconectou", jogadorDesconectou);
-    socket.on("partida-encerrada", encerrarPartida);
-    socket.on("resultado-final", receberResultadoFinal);
-
-    return () => {
-    socket.off("atualizar-prontos", atualizarProntos);
-    socket.off("partida-iniciada", iniciarPartida);
-    socket.off("proxima-rodada", receberProximaRodada);
-    socket.off("jogador-desconectou", jogadorDesconectou);
-    socket.off("partida-encerrada", encerrarPartida);
-    socket.off("resultado-final", receberResultadoFinal);
-    };
-}, []);
-
-    useEffect(() => {
-    if (!partidaIniciada || rodadaFinalizada) return;
-
-    if (tempo <= 0) {
-        if (!rodadaFinalizada) {
-            setPontuacoesRodadas((anteriores) => [
-                ...anteriores,
-                pontos
-            ]);
-
-            setRodadaFinalizada(true);
-        }
-
-        return;
-    }
-
-    const intervalo = setInterval(() => {
-        setTempo((tempoAtual) => tempoAtual - 1);
-    }, 1000);
-
-    return () => clearInterval(intervalo);
-}, [tempo, rodadaFinalizada, pontos, partidaIniciada]);
-
-    function confirmarPronto() {
-    if (jaEstouPronto) return;
-
-    setJaEstouPronto(true);
-    socket.emit("jogador-pronto");
-}
-    
-const tituloResultado = resultadoFinal
-    ? resultadoFinal.meusPontos > resultadoFinal.pontosOponente
-        ? "VITÓRIA!"
-        : resultadoFinal.meusPontos < resultadoFinal.pontosOponente
-            ? "DERROTA!"
-            : "EMPATE!"
-    : "";
-const tipoResultado: "vitoria" | "derrota" | null =
-    resultadoFinal
-        ? resultadoFinal.meusPontos > resultadoFinal.pontosOponente
-            ? "vitoria"
-            : resultadoFinal.meusPontos < resultadoFinal.pontosOponente
-                ? "derrota"
-                : null
-        : null;
-        useEffect(() => {
-    if (tipoResultado) {
-        setResultadoMusica(tipoResultado);
-    }
-
-    return () => {
-        setResultadoMusica(null);
-    };
-}, [tipoResultado, setResultadoMusica]);
-        return (
-        <main className="multiplayer">
-             {tipoResultado && (
-            <PixelConfetti
-                active={true}
-                type={tipoResultado}
-            />
-        )}          
-
-            {resultadoFinal ? (
-    <div className="multiplayer__final">
-        <div className="multiplayer__final-info">
-            <Subtitle>RESULTADO FINAL</Subtitle>
-
-            <Text>{tituloResultado}</Text>
-
-            <div className="multiplayer__final-scores">
-                <div className="multiplayer__final-score">
-                    <strong>VOCÊ</strong>
-                    <span>{resultadoFinal.meusPontos} pontos</span>
-                </div>
-
-                <div className="multiplayer__final-score">
-                    <strong>OPONENTE</strong>
-                    <span>{resultadoFinal.pontosOponente} pontos</span>
-                </div>
-            </div>
-        </div>
-
-        <div className="multiplayer__final-buttons">
-            <Button
-                   cor="purple"
-                   type="button"
-                   onClick={() => navigate("/escolha-modo")}
-             >
-                    VOLTAR AO MENU
-            </Button>
-        </div>
-    </div>
-) : oponenteDesconectou ? (
-        <div className="multiplayer__desconexao">
-            <Subtitle>SEU OPONENTE DESCONECTOU!</Subtitle>
-            <p>A partida foi encerrada.</p>
-
-            <Button
-                   cor="purple"
-                   type="button"
-                   onClick={() => navigate("/escolha-modo")}
-     >
-                    VOLTAR
-            </Button>
-
-        </div>
-    ) : !partidaIniciada ? (
-        <div className="multiplayer__preparacao">
-            
-            <Subtitle>PREPARE-SE PARA JOGAR!</Subtitle>
-
-            <p>O jogo terá 5 rodadas.</p>
-            <p>Cada rodada terá 40 segundos.</p>
-            <p>Descubra a imagem para ganhar pontos!</p>
-
-            <p>Jogadores prontos: {jogadoresProntos}/2</p>
-
-            <Button
-                   cor="purple"
-                   type="button"
-                   onClick={confirmarPronto}
-                   disabled={jaEstouPronto}
-        >
-                {jaEstouPronto ? "AGUARDANDO JOGADOR..." : "PRONTO"}
-            </Button>
-
-        </div>
-    ) : (
+    return (
         <>
-            <header className="multiplayer__header">
-    <button
-        className="multiplayer__back"
-        onClick={() => {
-            socket.emit("finalizar-partida");
-            navigate("/escolha-modo");
-        }}
-        aria-label="Voltar para a Home"
-    >
-        <StepBack size={18} />
-    </button>
-
-    <Title>MULTIPLAYER</Title>
-
-</header>
-
-            <div className="multiplayer__info">
-                <div className="multiplayer__score">
-                     <p>Seus pontos: {pontos}</p>
-                     <p>Rodada {rodadaAtual} de 5</p>
-                     <p>Pontuação total: {pontuacaoTotal}</p>
-                </div>
-
-                <div className="multiplayer__rounds">
-                    {rounds.map((result, index) => (
-                        <span
-                            key={index}
-                            className={`multiplayer__round multiplayer__round--${result}`}
+            <main className="multiplayer">
+                <div className="multiplayer__grid">
+                    {resultadoFinal ? (
+                        <>
+                            <Subtitle>{tituloResultado}</Subtitle>
+                            <div className="multiplayer__final-scores">
+                                <div className="multiplayer__final-score">
+                                    <strong>VOCÊ</strong>
+                                    <span>{resultadoFinal.meusPontos} pts</span>
+                                </div>
+                                <div className="multiplayer__final-score">
+                                    <strong>OPONENTE</strong>
+                                    <span>{resultadoFinal.pontosOponente} pts</span>
+                                </div>
+                            </div>
+                        </>
+                    ) : oponenteDesconectou ? (
+                        <>
+                            <Subtitle>OPONENTE DESCONECTOU</Subtitle>
+                            <p>A partida foi encerrada.</p>
+                        </>
+                    ) : !partidaIniciada ? (
+                        <>
+                            <Subtitle>PREPARE-SE</Subtitle>
+                            <p>5 rodadas • 40s por rodada</p>
+                            <p>Descubra a imagem para ganhar pontos!</p>
+                        </>
+                    ) : erro ? (
+                        <p>{erro}</p>
+                    ) : imagemAtual && !rodadaFinalizada ? (
+                        <Puzzle
+                            imagem={imagemAtual.caminho.split("/").pop() ?? ""}
+                            pastaImagem="imgmultiplayer"
+                            estadoEtapa="jogando"
+                            onPontosChange={atualizarPontos}
                         />
-                    ))}
+                    ) : (
+                        <Subtitle>
+                            {rodadaFinalizada ? `RODADA ${rodadaAtual} CONCLUÍDA` : "CARREGANDO..."}
+                        </Subtitle>
+                    )}
                 </div>
 
-               <span className="multiplayer__timer">
-                    00:{String(tempo).padStart(2, "0")}
-               </span>
+                <section className="multiplayer__painel">
+                    <Subtitle>MULTIPLAYER</Subtitle>
 
-            </div>
+                    {resultadoFinal ? (
+                        <>
+                            <Text>RESULTADO FINAL</Text>
+                            <Button cor="purple" type="button" onClick={voltarAoMenu}>
+                                VOLTAR AO MENU
+                            </Button>
+                        </>
+                    ) : oponenteDesconectou ? (
+                        <Button cor="purple" type="button" onClick={voltarAoMenu}>
+                            VOLTAR
+                        </Button>
+                    ) : !partidaIniciada ? (
+                        <>
+                            <Subtitle>PRONTOS: {jogadoresProntos}/2</Subtitle>
+                            <Button
+                                cor="purple"
+                                type="button"
+                                onClick={confirmarPronto}
+                                disabled={jaEstouPronto}
+                            >
+                                {jaEstouPronto ? "AGUARDANDO JOGADOR..." : "PRONTO"}
+                            </Button>
+                            <Button type="button" onClick={voltarAoMenu}>
+                                SAIR
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Subtitle>RODADA {rodadaAtual}/5</Subtitle>
+                            <p>Pontos da rodada: {pontos}</p>
+                            <p>Pontuação total: {pontuacaoTotal}</p>
+                            <Timer tempo={tempo} />
 
-            <div className="multiplayer__puzzle">
-    {erro ? (
-        <p>{erro}</p>
-    ) : rodadaFinalizada ? (
-        <div className="multiplayer__result">
-    <Subtitle>RODADA FINALIZADA!</Subtitle>
-    <p>Sua pontuação: {pontos}</p>
+                            <div className="multiplayer__rounds">
+                                {rounds.map((result, index) => (
+                                    <span
+                                        key={index}
+                                        className={`multiplayer__round multiplayer__round--${result}`}
+                                    />
+                                ))}
+                            </div>
 
-    {rodadaAtual < 5 ? (
-    <>
-        <Button
-               cor="purple"
-               onClick={avancarRodada}
-               disabled={aguardandoOponente}
-  >
-               Próxima rodada
-        </Button>
+                            {rodadaFinalizada && (
+                                rodadaAtual < 5 ? (
+                                    <>
+                                        <Button
+                                            cor="purple"
+                                            type="button"
+                                            onClick={avancarRodada}
+                                            disabled={aguardandoOponente}
+                                        >
+                                            PRÓXIMA RODADA
+                                        </Button>
+                                        {aguardandoOponente && (
+                                            <p>Aguardando o outro jogador confirmar...</p>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Text>5 RODADAS CONCLUÍDAS!</Text>
+                                        <p>
+                                            {partidaEncerrada
+                                                ? "OS DOIS JOGADORES CONCLUÍRAM!"
+                                                : "Aguardando o outro jogador terminar..."}
+                                        </p>
+                                        <Button
+                                            cor="purple"
+                                            type="button"
+                                            onClick={enviarPontuacaoFinal}
+                                            disabled={enviouPontuacao}
+                                        >
+                                            {enviouPontuacao
+                                                ? "AGUARDANDO OPONENTE..."
+                                                : "FINALIZAR PARTIDA"}
+                                        </Button>
+                                    </>
+                                )
+                            )}
 
-        {aguardandoOponente && (
-            <p>
-                Aguardando o outro jogador confirmar...
-            </p>
-        )}
-    </>
-) : (
-        <>
-    <Text>VOCÊ CONCLUIU AS 5 RODADAS!</Text>
-<p>Pontuação final: {pontuacaoTotal}</p>
+                            <Button type="button" onClick={finalizarPartidaAoSair}>
+                                SAIR
+                            </Button>
+                        </>
+                    )}
+                </section>
+            </main>
 
-{partidaEncerrada ? (
-    <Text>PARTIDA ENCERRADA! OS DOIS JOGADORES CONCLUÍRAM!</Text>
-) : (
-    <p>Aguardando o outro jogador terminar...</p>
-)}
-
-<Button
-    cor="purple"
-    type="button"
-    onClick={() => {
-        setEnviouPontuacao(true);
-        socket.emit("jogador-finalizou", pontuacaoTotal);
-    }}
-    disabled={enviouPontuacao}
->
-    {enviouPontuacao ? "AGUARDANDO OPONENTE..." : "FINALIZAR PARTIDA"}
-</Button>
-
-</>
-    )}
-</div>
-    ) : imagemAtual ? (
-        <Puzzle
-            imagem={imagemAtual.caminho.split("/").pop() ?? ""}
-            pastaImagem="imgmultiplayer"
-            estadoEtapa="jogando"
-            onPontosChange={atualizarPontos}
-        />
-    ) : (
-        <p>Carregando quebra-cabeça...</p>
-    )}
-</div>
-    </>
-)}
-
-        </main>
+            {tipoResultado && (
+                <PixelConfetti
+                    active={true}
+                    type={tipoResultado}
+                />
+            )}
+        </>
     );
 }

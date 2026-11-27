@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS salas_multiplayer (
     codigo TEXT NOT NULL UNIQUE,
     tipo TEXT NOT NULL CHECK (tipo IN ('publica', 'privada')),
     status TEXT NOT NULL DEFAULT 'disponivel'
-        CHECK (status IN ('disponivel', 'aguardando', 'em_andamento')),
+    CHECK (status IN ('disponivel', 'aguardando', 'em_andamento')),
     criada_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 `);

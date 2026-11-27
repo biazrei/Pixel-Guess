@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { buscarImagensMultiplayer } from "../services/multiplayerfuncionamento.js";
-
+import { buscarImagensMultiplayer } from "../services/Multiplayer/multiplayerfuncionamento.js";
 const router = Router();
 
 router.get("/imagens-multiplayer", (req, res) => {

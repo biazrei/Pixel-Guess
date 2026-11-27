@@ -15,7 +15,7 @@ import multiplayerrouter from "./routes/multiplayerroutes.js";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 import "./seeds/salasMultiplayerSeed.js";
-import { configurarSalas } from "./services/salasMultiplayer.js";
+import { configurarSalas } from "./services/Multiplayer/salasMultiplayer.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
