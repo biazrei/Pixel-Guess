@@ -9,9 +9,7 @@ import {
 
 type ResultadoMusica = "vitoria" | "derrota" | null;
 
-const MusicaContext = createContext<
-  (resultado: ResultadoMusica) => void
->(() => {});
+const MusicaContext = createContext<(resultado: ResultadoMusica) => void>(() => {});
 
 export function useMusicaFundo() {
   return useContext(MusicaContext);
@@ -22,95 +20,66 @@ interface MusicaFundoProps {
 }
 
 export default function MusicaFundo({ children }: MusicaFundoProps) {
-  const fundoRef = useRef<HTMLAudioElement>(null);
-  const vitoriaRef = useRef<HTMLAudioElement>(null);
-  const derrotaRef = useRef<HTMLAudioElement>(null);
-
-  const iniciouRef = useRef(false);
   const [resultado, setResultado] = useState<ResultadoMusica>(null);
-  const resultadoAtualRef = useRef<ResultadoMusica>(null);
+  const iniciouRef = useRef(false);
 
+  // Guarda os 3 áudios em um único objeto na memória
+  const audiosRef = useRef<{
+    fundo: HTMLAudioElement;
+    vitoria: HTMLAudioElement;
+    derrota: HTMLAudioElement;
+  } | null>(null);
+
+  //Audio esperando interação do usuário para iniciar
   useEffect(() => {
-    const fundo = fundoRef.current;
-    const vitoria = vitoriaRef.current;
-    const derrota = derrotaRef.current;
+    const fundo = new Audio("/musica.mp3");
+    const vitoria = new Audio("/vitoria.mp3");
+    const derrota = new Audio("/derrota.mp3");
 
-    resultadoAtualRef.current = resultado;
-
-    if (!fundo || !vitoria || !derrota) return;
-
-    if (!iniciouRef.current) return;
-
-    fundo.pause();
-    vitoria.pause();
-    derrota.pause();
-
-    vitoria.currentTime = 0;
-    derrota.currentTime = 0;
-
-    if (resultado === "vitoria") {
-      vitoria.play().catch(console.error);
-    } else if (resultado === "derrota") {
-      derrota.play().catch(console.error);
-    } else {
-      fundo.play().catch(console.error);
-    }
-  }, [resultado]);
-
-  useEffect(() => {
-    const fundo = fundoRef.current;
-    const vitoria = vitoriaRef.current;
-    const derrota = derrotaRef.current;
-
-    if (!fundo || !vitoria || !derrota) return;
-
+    fundo.loop = true;
     fundo.volume = 0.06;
-    vitoria.volume = 0.10;
-    derrota.volume = 0.10;
+    vitoria.volume = 0.1;
+    derrota.volume = 0.1;
+
+    // Quando a música de vitória ou derrota acabar, volta para o estado normal (null)
+    vitoria.onended = () => setResultado(null);
+    derrota.onended = () => setResultado(null);
+
+    audiosRef.current = { fundo, vitoria, derrota };
 
     function iniciarMusica() {
       iniciouRef.current = true;
-
-      if (resultadoAtualRef.current === null) {
-        fundo!.play().catch(console.error);
-      }
-
-      document.removeEventListener("click", iniciarMusica);
-      document.removeEventListener("keydown", iniciarMusica);
+      fundo.play().catch(console.error);
     }
 
-    document.addEventListener("click", iniciarMusica);
-    document.addEventListener("keydown", iniciarMusica);
+    //{ once: true } remove o evento automaticamente após o primeiro clique ou tecla
+    document.addEventListener("click", iniciarMusica, { once: true });
+    document.addEventListener("keydown", iniciarMusica, { once: true });
 
     return () => {
       document.removeEventListener("click", iniciarMusica);
       document.removeEventListener("keydown", iniciarMusica);
+      Object.values(audiosRef.current!).forEach((audio) => audio.pause());
     };
   }, []);
 
+  //Troca a música sempre que resultado da partida mudar
+  useEffect(() => {
+    const audios = audiosRef.current;
+    if (!audios || !iniciouRef.current) return;
+
+    //Pausa todos os áudios e reinicia os efeitos curtos
+    Object.values(audios).forEach((audio) => audio.pause());
+    audios.vitoria.currentTime = 0;
+    audios.derrota.currentTime = 0;
+
+    //Toca o áudio correspondente ao estado atual
+    const audioAtual = resultado ? audios[resultado] : audios.fundo;
+    audioAtual.play().catch(console.error);
+  }, [resultado]);
+
   return (
     <MusicaContext.Provider value={setResultado}>
-      <audio
-        ref={fundoRef}
-        src="/musica.mp3"
-        loop
-        preload="auto"
-      />
-
-      <audio
-        ref={vitoriaRef}
-        src="/vitoria.mp3"
-        preload="auto"
-        onEnded={() => setResultado(null)}
-      />
-
-      <audio
-        ref={derrotaRef}
-        src="/derrota.mp3"
-        preload="auto"
-        onEnded={() => setResultado(null)}
-      />
-
       {children}
     </MusicaContext.Provider>
   );
