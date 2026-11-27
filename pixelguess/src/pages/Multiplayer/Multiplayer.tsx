@@ -99,27 +99,27 @@ export default function Multiplayer() {
                             </div>
 
                             <div className="multiplayer__buttons">
-                                {rodadaAtual < 5 ? (
+                                {rodadaAtual < 5 && !aguardandoOponente && (
                                     <Button
                                         cor="purple"
                                         type="button"
                                         onClick={avancarRodada}
-                                        disabled={aguardandoOponente}
                                     >
-                                        {aguardandoOponente ? "AGUARDANDO..." : "PRÓXIMA RODADA"}
+                                        PRÓXIMA RODADA
                                     </Button>
-                                ) : (
+                                )}
+
+                                {rodadaAtual === 5 && !enviouPontuacao && (
                                     <Button
                                         cor="purple"
                                         type="button"
                                         onClick={enviarPontuacaoFinal}
-                                        disabled={enviouPontuacao}
                                     >
-                                        {enviouPontuacao ? "AGUARDANDO OPONENTE..." : "FINALIZAR PARTIDA"}
+                                        FINALIZAR PARTIDA
                                     </Button>
                                 )}
 
-                                <Button type="button" onClick={finalizarPartidaAoSair}>
+                                <Button type="button" onClick={voltarAoMenu}>
                                     SAIR
                                 </Button>
                             </div>
