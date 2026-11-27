@@ -2,7 +2,14 @@ import Button from "../../components/Button/Button";
 import "./Sequencia.css";
 import { useNavigate } from "react-router";
 import { buscarImagensSeq } from "./Service/SeqService";
-import {lerProgressoSequencia, limparProgressoSequencia, salvarProgressoSequencia, type EstadoEtapaSeq,type EstadoSequencia,type PecasPorEtapa,} from "./Service/SeqStorage";
+import {
+  lerProgressoSequencia,
+  limparProgressoSequencia,
+  salvarProgressoSequencia,
+  type EstadoEtapaSeq,
+  type EstadoSequencia,
+  type PecasPorEtapa,
+} from "./Service/SeqStorage";
 import { useState, useEffect, useRef, useCallback } from "react";
 import JogoSequencia, { type JogoSeqRef } from "./Jogo/JogoSeq";
 import Subtitle from "../../components/Subtitle/Subtitle";
@@ -11,32 +18,36 @@ import Timer from "../../components/Timer/Timer";
 
 export default function Sequencia() {
   const navigate = useNavigate();
-  const [imagensSeq, setImagensSeq] = useState({ imagem_1: "",imagem_2: "",imagem_3: "",});
-  const [etapa, setEtapa] = useState(() => lerProgressoSequencia()?.etapa ?? 1);
+  const salvo = lerProgressoSequencia();
+
+  const [imagensSeq, setImagensSeq] = useState({
+    imagem_1: "",
+    imagem_2: "",
+    imagem_3: "",
+  });
+
+  const [etapa, setEtapa] = useState(salvo?.etapa ?? 1);
   const [estadoEtapa, setEstadoEtapa] = useState<EstadoEtapaSeq>(
-    () => lerProgressoSequencia()?.estadoEtapa ?? "jogando"
+    salvo?.estadoEtapa ?? "jogando"
   );
   const [estadoSequencia, setEstadoSequencia] = useState<EstadoSequencia>(
-    () => lerProgressoSequencia()?.estadoSequencia ?? "inicio"
+    salvo?.estadoSequencia ?? "inicio"
   );
   const jogoSeqRef = useRef<JogoSeqRef>(null);
-  const [pontosTotal, setPontosTotal] = useState(
-    () => lerProgressoSequencia()?.pontosTotal ?? 0
-  );
-  const [placarEtapa, setPlacarEtapa] = useState(
-    () => lerProgressoSequencia()?.placarEtapa ?? 0
-  );
+  const [pontosTotal, setPontosTotal] = useState(salvo?.pontosTotal ?? 0);
+  const [placarEtapa, setPlacarEtapa] = useState(salvo?.placarEtapa ?? 0);
   const [pontosEtapa, setPontosEtapa] = useState<number[]>(
-    () => lerProgressoSequencia()?.pontosEtapa ?? [0, 0, 0]
+    salvo?.pontosEtapa ?? [0, 0, 0]
   );
-  const [tempo, setTempo] = useState(() => lerProgressoSequencia()?.tempo ?? 40);
+  const [tempo, setTempo] = useState(salvo?.tempo ?? 40);
   const [pecasPorEtapa, setPecasPorEtapa] = useState<PecasPorEtapa>(
-    () => lerProgressoSequencia()?.pecasPorEtapa ?? {}
+    salvo?.pecasPorEtapa ?? {}
   );
 
   useEffect(() => {
     async function carregarDados() {
-      try { const dados = await buscarImagensSeq();
+      try {
+        const dados = await buscarImagensSeq();
         setImagensSeq(dados);
       } catch (erro) {
         console.error("Erro ao carregar sequência:", erro);

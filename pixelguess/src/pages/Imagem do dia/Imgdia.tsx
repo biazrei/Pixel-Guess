@@ -8,14 +8,9 @@ import JogoDia from "./jogo/JogoDia";
 import { useState, useEffect, useCallback } from "react";
 import { buscarImagemDoDia, verificarResposta } from "./service/ImgDiaService";
 import {
-  lerCardsImgDia,
-  lerNomeImgDia,
-  lerPontosImgDia,
-  lerStatusImgDia,
-  salvarCardsImgDia,
-  salvarNomeImgDia,
-  salvarPontosImgDia,
-  salvarStatusImgDia,
+  lerProgressoImgDia,
+  salvarProgressoImgDia,
+  type ProgressoImgDia,
   type StatusImgDia,
 } from "./service/ImgStorage";
 import { PixelConfetti } from "../../components/PixelConfetti/PixelConfetti";
@@ -24,16 +19,16 @@ import { useMusicaFundo } from "../../components/MusicaFundo/MusicaFundo";
 export default function ImagemDoDia() {
   const navigate = useNavigate();
   const setGameOverMusica = useMusicaFundo();
+
+  const [imagemAtual, setImagemAtual] = useState<{ id: number; caminho: string } | null>(null);
+  const [progressoSalvo, setProgressoSalvo] = useState<ProgressoImgDia | null>(null);
   const [pontos, setPontos] = useState<number>(1500);
-  const [pontosIniciais, setPontosIniciais] = useState<number>(1500);
   const [resposta, setResposta] = useState("");
   const [resultado, setResultado] = useState<"correta" | "errada" | "">("");
   const [ultimaTentativa, setUltimaTentativa] = useState(false);
   const [nomeResposta, setNomeResposta] = useState("");
   const [estadoJogo, setEstadoJogo] = useState<StatusImgDia>("jogando");
-  const [imagemAtual, setImagemAtual] = useState<{ id: number; caminho: string } | null>(null);
-  const [cardsIniciais, setCardsIniciais] = useState<number[]>([]);
-  const [carregouDados, setCarregouDados] = useState(false);
+  const [cardsRevelados, setCardsRevelados] = useState<number[]>([]);
 
   useEffect(() => {
     if (estadoJogo === "vitoria" || estadoJogo === "derrota") {
@@ -47,53 +42,52 @@ export default function ImagemDoDia() {
   }, [estadoJogo, setGameOverMusica]);
 
   useEffect(() => {
+    let ativo = true;
+
     buscarImagemDoDia()
       .then((dados) => {
-        if (!dados?.id) return;
+        if (!ativo || !dados?.id) return;
+        const salvo = lerProgressoImgDia(dados.id);
+
         setImagemAtual(dados);
+        setProgressoSalvo(salvo);
 
-        const statusSalvo = lerStatusImgDia(dados.id);
-        const pontosSalvos = lerPontosImgDia(dados.id);
-        const nomeSalvo = lerNomeImgDia(dados.id);
-        const cardsSalvos = lerCardsImgDia(dados.id);
-
-        if (pontosSalvos !== null) {
-          setPontos(pontosSalvos);
-          setPontosIniciais(pontosSalvos);
+        if (salvo) {
+          setPontos(salvo.pontos ?? 1500);
+          setNomeResposta(salvo.nomeResposta ?? "");
+          setUltimaTentativa(Boolean(salvo.ultimaTentativa));
+          setCardsRevelados(Array.isArray(salvo.cardsRevelados) ? salvo.cardsRevelados : []);
+          if (salvo.estadoJogo === "vitoria" || salvo.estadoJogo === "derrota") {
+            setEstadoJogo(salvo.estadoJogo);
+          }
         }
-
-        if (nomeSalvo) {
-          setNomeResposta(nomeSalvo);
-        }
-
-        setCardsIniciais(cardsSalvos);
-
-        if (statusSalvo === "vitoria" || statusSalvo === "derrota") {
-          setEstadoJogo(statusSalvo);
-        }
-
-        setCarregouDados(true);
       })
       .catch((err) => console.error("Erro ao buscar imagem:", err));
+
+    return () => {
+      ativo = false;
+    };
   }, []);
 
   useEffect(() => {
-    if (!imagemAtual?.id || !carregouDados) return;
-    salvarPontosImgDia(imagemAtual.id, pontos);
-  }, [pontos, imagemAtual, carregouDados]);
+    if (!imagemAtual?.id) return;
 
-  const aoMudarCardsRevelados = useCallback(
-    (novosCards: number[]) => {
-      if (imagemAtual?.id) {
-        salvarCardsImgDia(imagemAtual.id, novosCards);
-      }
-    },
-    [imagemAtual]
-  );
+    salvarProgressoImgDia(imagemAtual.id, {
+      estadoJogo,
+      pontos,
+      cardsRevelados,
+      nomeResposta,
+      ultimaTentativa,
+    });
+  }, [imagemAtual, estadoJogo, pontos, cardsRevelados, nomeResposta, ultimaTentativa]);
+
+  const aoMudarCardsRevelados = useCallback((novosCards: number[]) => {
+    setCardsRevelados(novosCards);
+  }, []);
 
   const handleUltimoCardRevelado = useCallback(() => {
-  setUltimaTentativa(true);
-}, []);
+    setUltimaTentativa(true);
+  }, []);
 
   async function envioResposta(evento: React.FormEvent) {
     evento.preventDefault();
@@ -102,24 +96,16 @@ export default function ImagemDoDia() {
     try {
       const dados = await verificarResposta(resposta);
       if (dados.acertou) {
-        const nomeFinal = dados.nomeResposta || "";
         setResultado("correta");
         setEstadoJogo("vitoria");
-        setNomeResposta(nomeFinal);
-
-        salvarStatusImgDia(imagemAtual.id, "vitoria");
-        salvarNomeImgDia(imagemAtual.id, nomeFinal);
+        setNomeResposta(dados.nomeResposta || "");
       } else {
         setResultado("errada");
         setResposta("");
 
         if (ultimaTentativa) {
-          const novosPontos = Math.max(pontos - 100, 0);
-          setPontos(novosPontos);
+          setPontos((prev) => Math.max(prev - 100, 0));
           setEstadoJogo("derrota");
-
-          salvarStatusImgDia(imagemAtual.id, "derrota");
-          salvarPontosImgDia(imagemAtual.id, novosPontos);
         } else {
           setTimeout(() => setResultado(""), 1000);
         }
@@ -136,11 +122,14 @@ export default function ImagemDoDia() {
     return null;
   }
 
+  const cardsIniciais = progressoSalvo?.cardsRevelados ?? [];
+  const pontosIniciais = progressoSalvo?.pontos ?? 1500;
+
   return (
     <main className="imgdia">
       <div className="imgdia__grid">
         <JogoDia
-          key={`${imagemAtual?.id ?? "sem-id"}-${carregouDados ? "pronto" : "carregando"}`}
+          key={imagemAtual?.id ?? "carregando"}
           imagem={imagemAtual}
           onPontosChange={setPontos}
           estadoJogo={estadoJogo}
